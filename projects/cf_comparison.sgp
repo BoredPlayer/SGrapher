@@ -1,0 +1,51 @@
+# This is software-generated project file for SGrapher
+# 
+# ---META INFO---
+# Time of initial project creation
+PROJECTCREATED=Tue Aug 16 11:12:57 2022
+# 
+# Time of last project update
+PROJECTUPDATED=Tue Aug 16 20:46:50 2022
+# 
+# ---GENERATOR INFO---
+# Path to graph generator
+GRAPHRUNPATH=C:/Users/user/Documents/git/SGrapher/modules/engine.py
+# 
+# ---DATA INFO---
+# Types of data
+DATATYPE=RANS	uRANS/DNS
+DATATYPE=EXPE	Experiment
+# 
+# Files to read
+FILE=RANS	C:/Users/user/Documents/Uczelnia/OPUS docs/prezentacje/NACA0012_2D/wspolczynnik_tarcia/NACA0012_2D_c_res_cf.xy	Fully turbulent	-	black
+FILE=RANS	C:/Users/user/Documents/Uczelnia/OPUS docs/prezentacje/NACA0012_2D/wspolczynnik_tarcia/NACA0012_2D_c-im_res_cf.xy	Intermittency	-	red
+FILE=RANS	C:/Users/user/Documents/Uczelnia/OPUS docs/prezentacje/NACA0012_2D/wspolczynnik_tarcia/NACA0012_2D_c-im-ct_res_cf.xy	Intermittency with crossflow transition	--	#1f77b4
+# 
+# --- GRAPH SETTINGS ---
+# Output file name
+OUTPUTGRAPHFILENAME=
+# 
+# Graph DPI
+OUTPUTGRAPHDPI=500.0
+# 
+# Show or save (T=save, N=show)
+OUTPUTGRAPHSAVETOGGLE=N
+# 
+# Graph title
+OUTPUTGRAPHTITLE=Porównanie wspó³czynnika tarcia dla ró¿nych metod modelowania przejœcia
+# 
+# Graph X-axis name
+OUTPUTGRAPHXAXISNAME=Pozycja wzd³u¿ ciêciwy $[m]$
+# 
+# Graph Y-axis name
+OUTPUTGRAPHYAXISNAME=$C_p$
+# 
+# Graph size
+OUTPUTGRAPHWIDTH=7.874015748031496
+OUTPUTGRAPHHEIGHT=3.937007874015748
+# 
+# Domain size (auto for auto-sizing)
+OUTPUTDOMAINMINX=-0.01
+OUTPUTDOMAINMAXX=0.31
+OUTPUTDOMAINMINY=-0.0025
+OUTPUTDOMAINMAXY=0.0425
