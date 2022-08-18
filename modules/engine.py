@@ -26,11 +26,18 @@ def main():
         project = loadPorject(sys.argv[sys.argv.index("-p")+1])
 
     for i in range(len(project)):
-        flabels, fcontent = project.readData(filename=project.filelist[i],
+        if('.xy' in project.filelist[i]):
+            flabels, fcontent = project.readData(filename=project.filelist[i],
                                     separationChar="\t",
                                     returnLabels=True,
                                     lessInfo=True
-            )
+                )
+        if('.csv' in project.filelist[i]):
+            flabels, fcontent = project.readData(filename=project.filelist[i],
+                                    separationChar=",",
+                                    returnLabels=True,
+                                    lessInfo=True
+                )
         for o in range(len(flabels)):
             hide_label = False
             if(o<len(flabels)-1):
