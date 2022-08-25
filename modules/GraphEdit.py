@@ -108,16 +108,19 @@ class GraphEdit(QWidget):
 
     def createLogScaleChecks(self):
         self.logScaleCheckBox = QGroupBox("Set log scale on axis")
-        layout = QHBoxLayout()
+        layout = QGridLayout()
 
         self.xlogscalecheck = QCheckBox("X-axis log scale")
         self.ylogscalecheck = QCheckBox("Y-axis log scale")
+        self.flogscalecheck = QCheckBox("Force absolute")
 
         self.xlogscalecheck.stateChanged.connect(lambda:self.logScaleCheckBoxChanged(self.xlogscalecheck))
         self.ylogscalecheck.stateChanged.connect(lambda:self.logScaleCheckBoxChanged(self.ylogscalecheck))
+        self.flogscalecheck.stateChanged.connect(lambda:self.logScaleCheckBoxChanged(self.flogscalecheck))
 
-        layout.addWidget(self.xlogscalecheck)
-        layout.addWidget(self.ylogscalecheck)
+        layout.addWidget(self.xlogscalecheck, 0, 0)
+        layout.addWidget(self.ylogscalecheck, 0, 1)
+        layout.addWidget(self.flogscalecheck, 1, 0)
 
         self.logScaleCheckBox.setLayout(layout)
 
@@ -186,6 +189,7 @@ class GraphEdit(QWidget):
 
         self.xlogscalecheck.setEnabled(state)
         self.ylogscalecheck.setEnabled(state)
+        self.flogscalecheck.setEnabled(state)
 
         self.outputfilename.setEnabled(state)
         self.searchForFileButton.setEnabled(state)
@@ -215,6 +219,10 @@ class GraphEdit(QWidget):
         if(self.ylogscalecheck.isChecked()):
             lcstring = lcstring+'y'
         self.project.setScaleType(lcstring)
+        if(self.flogscalecheck.isChecked()):
+            self.project.setScaleForceType(lcstring)
+        else:
+            self.project.setScaleForceType('')
 
     def reloadText(self):
         self.imageheightline.setText(str(self.project.OUTPUTGRAPHHEIGHT))
@@ -237,3 +245,7 @@ class GraphEdit(QWidget):
             self.ylogscalecheck.setChecked(True)
         else:
             self.ylogscalecheck.setChecked(False)
+        if(self.project.isYLogScaleForced() or self.project.isXLogScaleForced()):
+            self.flogscalecheck.setChecked(True)
+        else:
+            self.flogscalecheck.setChecked(False)

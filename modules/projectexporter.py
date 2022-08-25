@@ -27,6 +27,7 @@ class SGProjectExporter():
         self.OUTPUTDOMAINMINY = 'auto'
         self.OUTPUTDOMAINMAXY = 'auto'
         self.OUTPUTDOMAINLOGSCALE = 'none'
+        self.FORCEGRAPHLOGSCALE = 'none'
         self.len = 0
         if(filename is not None):
             self.setFileName(filename)
@@ -83,7 +84,12 @@ class SGProjectExporter():
                     self.typelist[1].append(ls[1])
                     knowncommand = True
                 if(ll[0] == "FILE"):
-                    ls = ll[1].split("\t")
+                    lmk = ll[1]
+                    # This part fixes bug destroing file notation
+                    # in project, when '=' sign is used in legend.
+                    if(len(ll)>2):
+                        lmk = '='.join(ll[1:])
+                    ls = lmk.split("\t")
                     self.namelist.append(ls[0])
                     self.filelist.append(ls[1])
                     if(len(ls)>2):
@@ -113,7 +119,7 @@ class SGProjectExporter():
                     self.OUTPUTGRAPHSAVETOGGLE = ll[1]
                     knowncommand = True
                 if(ll[0] == "OUTPUTGRAPHTITLE"):
-                    self.OUTPUTGRAPHTITLE = ll[1]
+                    self.setGraphTitle(ll[1])
                     knowncommand = True
                 if(ll[0] == "OUTPUTGRAPHXAXISNAME"):
                     self.OUTPUTGRAPHXAXISNAME = ll[1]
@@ -123,6 +129,9 @@ class SGProjectExporter():
                     knowncommand = True
                 if(ll[0] == "OUTPUTGRAPHLOGSCALE"):
                     self.setScaleType(ll[1])
+                    knowncommand=True
+                if(ll[0] == "FORCEGRAPHLOGSCALE"):
+                    self.setScaleForceType(ll[1])
                     knowncommand=True
                 if(ll[0] == "OUTPUTGRAPHWIDTH"):
                     self.OUTPUTGRAPHWIDTH = float(ll[1])
@@ -252,7 +261,7 @@ class SGProjectExporter():
         '''
         Title = self.OUTPUTGRAPHTITLE
         if("\n" in Title and decode):
-            Title = "\\\\n".join(Title.split("\n"))
+            Title = r"\n".join(Title.split("\n"))
         return Title
     
     def getAxisNames(self, decode = True):
@@ -364,6 +373,8 @@ class SGProjectExporter():
                 odomlsc += 'y'
             if(odomlsc == ''):
                 self.OUTPUTDOMAINLOGSCALE = 'none'
+            else:
+                self.OUTPUTDOMAINLOGSCALE = odomlsc
         else:
             if(isinstance(scaleType, list)):
                 if(len(scaleType==2) and (isinstance(scaleType[0], int) or isinstance(scaleType[0], bool)) and (isinstance(scaleType[1], int) or isinstance(scaleType[1], bool))):
@@ -372,8 +383,41 @@ class SGProjectExporter():
                         self.OUTPUTDOMAINLOGSCALE += 'x'
                     if(scaleType[1]==1):
                         self.OUTPUTDOMAINLOGSCALE += 'y'
+                    if(self.OUTPUTDOMAINLOGSCALE==''):
+                        self.OUTPUTDOMAINLOGSCALE = 'none'
         print(f"Scale type: {self.OUTPUTDOMAINLOGSCALE}")
     
+    def setScaleForceType(self, scaleForce):
+        if(isinstance(scaleForce, str)):
+            odomlsc = ''
+            if('x' in scaleForce):
+                odomlsc += 'x'
+            if('y' in scaleForce):
+                odomlsc += 'y'
+            if(odomlsc == ''):
+                self.FORCEGRAPHLOGSCALE = ''
+            else:
+                self.FORCEGRAPHLOGSCALE = odomlsc
+        else:
+            if(isinstance(scaleForce, list)):
+                if(len(scaleForce==2) and (isinstance(scaleForce[0], int) or isinstance(scaleForce[0], bool)) and (isinstance(scaleForce[1], int) or isinstance(scaleForce[1], bool))):
+                    self.FORCEGRAPHLOGSCALE = ''
+                    if(scaleForce[0]==1):
+                        self.FORCEGRAPHLOGSCALE += 'x'
+                    if(scaleForce[1]==1):
+                        self.FORCEGRAPHLOGSCALE += 'y'
+        print(f"Scale forcing on: {self.FORCEGRAPHLOGSCALE}")
+    
+    def isYLogScaleForced(self):
+        if('y' in self.FORCEGRAPHLOGSCALE):
+            return True
+        return False
+
+    def isXLogScaleForced(self):
+        if('x' in self.FORCEGRAPHLOGSCALE):
+            return True
+        return False
+
     def exportProject(self, filename = None, commentSign = '#'):
         if(filename is None):
             filename = self.filename
@@ -411,6 +455,7 @@ class SGProjectExporter():
         file.write(f"OUTPUTGRAPHYAXISNAME={self.getAxisNames(decode=True)[1]}\n")
         file.write("# \n# Scale type\n")
         file.write(f"OUTPUTGRAPHLOGSCALE={self.getScaleType()}\n")
+        file.write(f"FORCEGRAPHLOGSCALE={self.FORCEGRAPHLOGSCALE}\n")
         file.write("# \n# Graph size\n")
         file.write(f"OUTPUTGRAPHWIDTH={self.OUTPUTGRAPHWIDTH}\n")
         file.write(f"OUTPUTGRAPHHEIGHT={self.OUTPUTGRAPHHEIGHT}\n")

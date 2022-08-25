@@ -150,10 +150,13 @@ class MainWindow(QMainWindow):
         '''
         if(self.previousTab == 0):
             self.previousProject = copy(self.widget.FileTab.getProject())
+            print("Loading project from File Tab")
         if(self.previousTab == 1):
             self.previousProject = copy(self.widget.GraphTab.getProject())
+            print("Loading project from Graph Tab")
         if(self.previousTab == 2):
             self.previousProject = copy(self.widget.LegendTab.getProject())
+            print("Loading project from Legend Tab")
         
         self.widget.FileTab.setProject(self.previousProject)
         self.widget.FileTab.svFile()
@@ -188,6 +191,7 @@ class MainWindow(QMainWindow):
         if(self.currentTab == 2):
             self.widget.LegendTab.setProject(self.previousProject)
             self.widget.LegendTab.updateListView()
+        self.previousTab = copy(self.currentTab)
 
 if(__name__ == "__main__"):
     app = QApplication(sys.argv)

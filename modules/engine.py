@@ -28,7 +28,7 @@ def main():
     for i in range(len(project)):
         if('.xy' in project.filelist[i]):
             flabels, fcontent = project.readData(filename=project.filelist[i],
-                                    separationChar="\t",
+                                    separationChar=" ",
                                     returnLabels=True,
                                     lessInfo=True
                 )
@@ -38,18 +38,32 @@ def main():
                                     returnLabels=True,
                                     lessInfo=True
                 )
+        print("flabels:")
+        print(flabels)
         for o in range(len(flabels)):
             hide_label = False
             if(o<len(flabels)-1):
                 lcontent = np.asarray(fcontent)[:, flabels[o][0]:flabels[o+1][0]]
                 lcontent = lcontent[:,lcontent[0, :].argsort()]
+                ycontent = lcontent[1, :]
+                xcontent = lcontent[0, :]
                 #gr.loadData(fcontent[0][flabels[o][0]:flabels[o+1][0]], fcontent[1][flabels[o][0]:flabels[o+1][0]])
-                gr.loadData(lcontent[0, :], lcontent[1, :])
+                if(project.isYLogScaleForced()):
+                    ycontent = np.absolute(ycontent)
+                if(project.isXLogScaleForced()):
+                    xcontent = np.absolute(xcontent)
+                gr.loadData(xcontent, ycontent)
             else:
                 lcontent = np.asarray(fcontent)[:, flabels[o][0]:]
                 lcontent = lcontent[:, lcontent[0, :].argsort()]
+                ycontent = lcontent[1, :]
+                xcontent = lcontent[0, :]
                 #lcontent = sorted(lcontent, key=lambda lcontent: int(lcontent[0]))
-                gr.loadData(lcontent[0, :], lcontent[1, :])
+                if(project.isYLogScaleForced()):
+                    ycontent = np.absolute(ycontent)
+                if(project.isXLogScaleForced()):
+                    xcontent = np.absolute(xcontent)
+                gr.loadData(xcontent, ycontent)
             print(f"Is label {project.getLegend(i)} in gr.labels?")
             print(project.getLegend(i) in gr.labels)
             if(project.getLegend(i) in gr.labels):
@@ -67,7 +81,7 @@ def main():
                      x_lim=project.getDomainXSize(),
                      y_lim=project.getDomainYSize(),
                      filename=project.getGraphFileName(),
-                     graph_title=project.getGraphTitle(),
+                     graph_title=project.getGraphTitle(decode=False),
                      plot_size=project.getGraphSize(),
                      save=project.getSaveToggle(),
                      show=project.getSaveToggle(False),
