@@ -11,7 +11,7 @@ import sys
 from os.path import exists as path_exists
 import numpy as np
 
-def loadPorject(project_filename):
+def loadProject(project_filename):
     print("Loading data from launcher.")
     if(project_filename[-3:]=="sgp"):
         project = sgp(filename=project_filename)
@@ -23,7 +23,7 @@ def main():
     # file_contents = []
     gr = grapher.grapher()
     if("-p" in sys.argv):
-        project = loadPorject(sys.argv[sys.argv.index("-p")+1])
+        project = loadProject(sys.argv[sys.argv.index("-p")+1])
 
     for i in range(len(project)):
         if('.xy' in project.filelist[i]):
@@ -70,7 +70,8 @@ def main():
                      graph_title=project.getGraphTitle(),
                      plot_size=project.getGraphSize(),
                      save=project.getSaveToggle(),
-                     show=project.getSaveToggle(False)
+                     show=project.getSaveToggle(False),
+                     log_scale=project.getScaleType()
         )
     pass
 

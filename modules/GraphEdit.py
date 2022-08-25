@@ -23,14 +23,24 @@ class GraphEdit(QWidget):
     def initUI(self):
         self.createGraphSettings()
         self.createDomainSettings()
+        self.createLogScaleChecks()
         self.createFileSettings()
 
         self.createUpdateButton()
 
         HorizontalBox = QGroupBox()
         horizontalLayout = QHBoxLayout()
+
+        InnerVerticalBox = QGroupBox("Domain settings")
+        innerVerticalLayout = QVBoxLayout()
+
         horizontalLayout.addWidget(self.graphSettingsBox)
-        horizontalLayout.addWidget(self.domainSettingsBox)
+
+        innerVerticalLayout.addWidget(self.domainSettingsBox)
+        innerVerticalLayout.addWidget(self.logScaleCheckBox)
+        InnerVerticalBox.setLayout(innerVerticalLayout)
+
+        horizontalLayout.addWidget(InnerVerticalBox)
         HorizontalBox.setLayout(horizontalLayout)
 
         mainLayout = QVBoxLayout()
@@ -76,7 +86,7 @@ class GraphEdit(QWidget):
         self.graphSettingsBox.setLayout(layout)
 
     def createDomainSettings(self):
-        self.domainSettingsBox = QGroupBox("Domain settings")
+        self.domainSettingsBox = QGroupBox("Axis scale")
         layout = QFormLayout()
 
         self.domainminx = QLineEdit(str(self.project.OUTPUTDOMAINMINX))
@@ -95,6 +105,21 @@ class GraphEdit(QWidget):
         layout.addRow("Max Y value", self.domainmaxy)
 
         self.domainSettingsBox.setLayout(layout)
+
+    def createLogScaleChecks(self):
+        self.logScaleCheckBox = QGroupBox("Set log scale on axis")
+        layout = QHBoxLayout()
+
+        self.xlogscalecheck = QCheckBox("X-axis log scale")
+        self.ylogscalecheck = QCheckBox("Y-axis log scale")
+
+        self.xlogscalecheck.stateChanged.connect(lambda:self.logScaleCheckBoxChanged(self.xlogscalecheck))
+        self.ylogscalecheck.stateChanged.connect(lambda:self.logScaleCheckBoxChanged(self.ylogscalecheck))
+
+        layout.addWidget(self.xlogscalecheck)
+        layout.addWidget(self.ylogscalecheck)
+
+        self.logScaleCheckBox.setLayout(layout)
 
     def createFileSettings(self):
         self.fileSettingsBox = QGroupBox("File settings")
@@ -159,6 +184,9 @@ class GraphEdit(QWidget):
         self.domainminy.setEnabled(state)
         self.domainmaxy.setEnabled(state)
 
+        self.xlogscalecheck.setEnabled(state)
+        self.ylogscalecheck.setEnabled(state)
+
         self.outputfilename.setEnabled(state)
         self.searchForFileButton.setEnabled(state)
 
@@ -180,6 +208,14 @@ class GraphEdit(QWidget):
         self.project.OUTPUTGRAPHYAXISNAME = self.yaxisname.text()
         self.project.OUTPUTGRAPHFILENAME = self.outputfilename.text()
 
+    def logScaleCheckBoxChanged(self, b):
+        lcstring = ''
+        if(self.xlogscalecheck.isChecked()):
+            lcstring = lcstring+'x'
+        if(self.ylogscalecheck.isChecked()):
+            lcstring = lcstring+'y'
+        self.project.setScaleType(lcstring)
+
     def reloadText(self):
         self.imageheightline.setText(str(self.project.OUTPUTGRAPHHEIGHT))
         self.imagewidthline.setText(str(self.project.OUTPUTGRAPHWIDTH))
@@ -192,3 +228,12 @@ class GraphEdit(QWidget):
         self.xaxisname.setText(str(self.project.OUTPUTGRAPHXAXISNAME))
         self.yaxisname.setText(str(self.project.OUTPUTGRAPHYAXISNAME))
         self.outputfilename.setText(self.project.OUTPUTGRAPHFILENAME)
+
+        if('x' in self.project.OUTPUTDOMAINLOGSCALE):
+            self.xlogscalecheck.setChecked(True)
+        else:
+            self.xlogscalecheck.setChecked(False)
+        if('y' in self.project.OUTPUTDOMAINLOGSCALE):
+            self.ylogscalecheck.setChecked(True)
+        else:
+            self.ylogscalecheck.setChecked(False)

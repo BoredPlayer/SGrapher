@@ -26,6 +26,7 @@ class SGProjectExporter():
         self.OUTPUTDOMAINMAXX = 'auto'
         self.OUTPUTDOMAINMINY = 'auto'
         self.OUTPUTDOMAINMAXY = 'auto'
+        self.OUTPUTDOMAINLOGSCALE = 'none'
         self.len = 0
         if(filename is not None):
             self.setFileName(filename)
@@ -52,15 +53,18 @@ class SGProjectExporter():
     def setRunPath(self, runpath):
         if(isfile(runpath)):
             self.runpath = runpath
+            return 0
         else:
-            raise Exception("Selected run path for graph generator is not available.")
+            print("Warning: Selected run path for graph generator is not available.")
+            return 1
+
     
     def loadProject(self, filename = None, commentSign = '#'):
         if(filename is None):
             filename = self.filename
 
         file = open(filename, "r")
-        for line in file:
+        for linenum, line in enumerate(file):
             knowncommand = False
             if(line[0]!=commentSign):
                 ll = line.strip().split('=')
@@ -117,6 +121,9 @@ class SGProjectExporter():
                 if(ll[0] == "OUTPUTGRAPHYAXISNAME"):
                     self.OUTPUTGRAPHYAXISNAME = ll[1]
                     knowncommand = True
+                if(ll[0] == "OUTPUTGRAPHLOGSCALE"):
+                    self.setScaleType(ll[1])
+                    knowncommand=True
                 if(ll[0] == "OUTPUTGRAPHWIDTH"):
                     self.OUTPUTGRAPHWIDTH = float(ll[1])
                     knowncommand = True
@@ -161,7 +168,7 @@ class SGProjectExporter():
                     knowncommand = True
 
                 if(not knowncommand):
-                    print(f"Warning! Uknown command: {ll[0]}.")
+                    print(f"Warning! Uknown command: {ll[0]} at line {linenum}.")
         file.close()
 
     def setDomainSize(self, domainMinX, domainMaxX, domainMinY, domainMaxY):
@@ -344,6 +351,28 @@ class SGProjectExporter():
         Works with matgrapher library standard.
         '''
         return [self.OUTPUTGRAPHWIDTH, self.OUTPUTGRAPHHEIGHT]
+
+    def getScaleType(self):
+        return self.OUTPUTDOMAINLOGSCALE
+
+    def setScaleType(self, scaleType):
+        if(isinstance(scaleType, str)):
+            odomlsc = ''
+            if('x' in scaleType):
+                odomlsc += 'x'
+            if('y' in scaleType):
+                odomlsc += 'y'
+            if(odomlsc == ''):
+                self.OUTPUTDOMAINLOGSCALE = 'none'
+        else:
+            if(isinstance(scaleType, list)):
+                if(len(scaleType==2) and (isinstance(scaleType[0], int) or isinstance(scaleType[0], bool)) and (isinstance(scaleType[1], int) or isinstance(scaleType[1], bool))):
+                    self.OUTPUTDOMAINLOGSCALE = ''
+                    if(scaleType[0]==1):
+                        self.OUTPUTDOMAINLOGSCALE += 'x'
+                    if(scaleType[1]==1):
+                        self.OUTPUTDOMAINLOGSCALE += 'y'
+        print(f"Scale type: {self.OUTPUTDOMAINLOGSCALE}")
     
     def exportProject(self, filename = None, commentSign = '#'):
         if(filename is None):
@@ -380,6 +409,8 @@ class SGProjectExporter():
         file.write(f"OUTPUTGRAPHXAXISNAME={self.getAxisNames(decode=True)[0]}\n")
         file.write("# \n# Graph Y-axis name\n")
         file.write(f"OUTPUTGRAPHYAXISNAME={self.getAxisNames(decode=True)[1]}\n")
+        file.write("# \n# Scale type\n")
+        file.write(f"OUTPUTGRAPHLOGSCALE={self.getScaleType()}\n")
         file.write("# \n# Graph size\n")
         file.write(f"OUTPUTGRAPHWIDTH={self.OUTPUTGRAPHWIDTH}\n")
         file.write(f"OUTPUTGRAPHHEIGHT={self.OUTPUTGRAPHHEIGHT}\n")

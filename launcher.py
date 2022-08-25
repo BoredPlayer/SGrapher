@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
         file_saveProject = QAction("Save project", self)
         file_saveProject.setShortcut('Ctrl+S')
         file_saveProject.setStatusTip('Save current project.')
-        file_saveProject.triggered.connect(self.widget.FileTab.svFile)
+        file_saveProject.triggered.connect(self.sendToSave)
 
         file_saveNewProject = QAction("Save project as", self)
         file_saveNewProject.setShortcut('Ctrl+B')
@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
         file_loadProject = QAction("Load project", self)
         file_loadProject.setShortcut('Ctrl+O')
         file_loadProject.setStatusTip("Select file name for project to be loaded.")
-        file_loadProject.triggered.connect(self.widget.FileTab.rldFile)
+        file_loadProject.triggered.connect(self.loadNewProject)
 
         file_runGenerator = QAction("Generate graph", self)
         file_runGenerator.setShortcut('Ctrl+R')
@@ -142,6 +142,33 @@ class MainWindow(QMainWindow):
             imagesave_text = "[Currently] Image showing mode"
         self.project_graphToggle.setText(project_graphToggle_title)
         self.widget.GraphTab.imagesave.setText(imagesave_text)
+
+    def sendToSave(self):
+        '''
+        Function repairing not saving current project
+        via 'Ctrl+S' shortcut.
+        '''
+        if(self.previousTab == 0):
+            self.previousProject = copy(self.widget.FileTab.getProject())
+        if(self.previousTab == 1):
+            self.previousProject = copy(self.widget.GraphTab.getProject())
+        if(self.previousTab == 2):
+            self.previousProject = copy(self.widget.LegendTab.getProject())
+        
+        self.widget.FileTab.setProject(self.previousProject)
+        self.widget.FileTab.svFile()
+
+    def loadNewProject(self):
+        '''
+        Function repairing not updating projects throughout
+        tabs after loading new project from other tab.
+        '''
+        self.widget.FileTab.rldFile()
+        self.previousProject = copy(self.widget.FileTab.getProject())
+        self.widget.GraphTab.setProject(self.previousProject)
+        self.widget.GraphTab.reloadText()
+        self.widget.LegendTab.setProject(self.previousProject)
+        self.widget.LegendTab.updateListView()
 
     def onChange(self, i):
         self.previousTab = copy(self.currentTab)

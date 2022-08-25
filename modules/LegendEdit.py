@@ -98,40 +98,37 @@ class LegendEdit(QWidget):
         try:
             sIdx = self.dataView.selectedIndexes()[0]
         except:
-            QMessageBox(Error, "No file selected!")
+            QMessageBox.question(self, "Error", "No file selected!", QMessageBox.Ok)
+            return
         idx = sIdx.model().itemFromIndex(sIdx).row()
         ot = self.getNew(legend=True)
         if(ot!=None):
             self.project.setLegend(ot, fileindex=int(idx))
             self.updateListView()
-        else:
-            QMessageBox(Error, "No file selected!")
 
     def getNewColor(self):
         try:
             sIdx = self.dataView.selectedIndexes()[0]
         except:
-            QMessageBox(Error, "No file selected!")
+            QMessageBox.question(self, "Error", "No file selected!", QMessageBox.Ok)
+            return
         idx = sIdx.model().itemFromIndex(sIdx).row()
         ot = self.getNew(color=True)
         if(ot!=None):
             self.project.setColor(ot, fileindex=int(idx))
             self.updateListView()
-        else:
-            QMessageBox(Error, "No file selected!")
         
     def getNewStyle(self):
         try:
             sIdx = self.dataView.selectedIndexes()[0]
         except:
-            QMessageBox(Error, "No file selected!")
+            QMessageBox.question(self, "Error", "No file selected!", QMessageBox.Ok)
+            return
         idx = sIdx.model().itemFromIndex(sIdx).row()
         ot = self.getNew(style=True)
         if(ot!=None):
             self.project.setLineStyle(ot, fileindex=int(idx))
             self.updateListView()
-        else:
-            QMessageBox(Error, "No file selected!")
 
     def onLineChanged(self, i):
         if(self.dataEdiatble):
