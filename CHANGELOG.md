@@ -3,7 +3,7 @@
 ## v. 0.2.2 - data exploder and minor bugfixes
 26.08.2022
 
-This version brings new data editing module to the table. Ever needed one file with multiple sets of data exploded into multiple files? Just turn on the `data exploder` module and pull a Kerbal Space Program on the file!
+This version brings a new data editing module to the table. Ever needed to chop one file with multiple sets of data exploded into multiple files? Just turn on the `data exploder` module and pull a Kerbal Space Program on the file!
 
 Bug fixes:\
 -> If labels are limited by ' " ' sign, the label separator sign will be ignored during preparation of returnable labels in projectexporter.readData() function.\
