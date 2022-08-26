@@ -5,7 +5,7 @@ from copy import deepcopy as copy
 class SGProjectExporter():
     def __init__(self, filename=None):
         self.filename=None
-        self.runpath = "cmpdata.py"
+        self.runpath = "modules/engine.py"
         self.typelist = [[], []]# stores dictionary of filetypes
         self.filelist = []# stores list of files
         self.legends = []# stores list of legends
@@ -510,7 +510,7 @@ class SGProjectExporter():
         if(isinstance(styles, list)):
             self.styles = styles
 
-    def readData(self, filename, separationChar = ' ', labelSeparationChar = ' ', returnLabels = False, lessInfo = True):
+    def readData(self, filename, separationChar = ' ', labelSeparationChar = ' ', stringTerminator = '"', returnLabels = False, lessInfo = True):
         '''
         Funkcja do odczytu plików tekstowych z wynikami. Może być stosowana do plików eksportowanych przez ANSYS Fluent,
         XFoil lub arkuszy csv. Funkcja może zwrócić zarówno wartości, jak i oznaczenia kolumn. Założono, że linia
@@ -572,7 +572,26 @@ class SGProjectExporter():
                     #może się zdarzyć, że znak rozdzielający poszczególne kolumny w ich opisie jest inny, niż znak rozdzielający kolumny
                     #wartości (przykład: pliki fluenta). Dlatego właśnie należy dodatkowo rozdzielić kolumny opisów.
                     if(separationChar!=labelSeparationChar):
-                        prevLine = prevLine[0].split(labelSeparationChar)
+                        prevLine = (separationChar.join(prevLine)).split(labelSeparationChar)
+                    if(stringTerminator!=None):
+                        glnum = 0
+                        for num, inst in enumerate(prevLine):
+                            if(num+glnum>=len(prevLine)):
+                                break
+                            localstring = inst
+                            ct = inst.count(stringTerminator)
+                            if(ct%2==1):
+                                localcounter = 0
+                                for localnum, nextword in enumerate(prevLine[num+1:]):
+                                    if(nextword.count(stringTerminator)%2==1 or nextword.count(stringTerminator)==0):
+                                        localstring = localstring+labelSeparationChar+nextword
+                                        prevLine.pop(localnum-localcounter)
+                                        localcounter = localcounter+1
+                                    else:
+                                        break
+                                prevLine[num] = localstring
+                                glnum+=localcounter
+
                     #jeżeli linia kończy się bezpośrednio za ostatnim elementem oznaczeń, na oznaczeniu może zostać znak '\n', który
                     #powinien być usunięty.
                     if('\n' in prevLine[-1]):

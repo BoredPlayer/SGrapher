@@ -1,5 +1,27 @@
 # Change log
 
+## v. 0.2.2 - data exploder and minor bugfixes
+26.08.2022
+
+This version brings new data editing module to the table. Ever needed one file with multiple sets of data exploded into multiple files? Just turn on the `data exploder` module and pull a Kerbal Space Program on the file!
+
+Bug fixes:\
+-> If labels are limited by ' " ' sign, the label separator sign will be ignored during preparation of returnable labels in projectexporter.readData() function.\
+-> Default graphing engine is set to "modules/engine.py"
+
+Known bugs:\
+-> Deleting file from project will mess up legend.
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Grid options (Graph tab),\
+-> Editing file name in text box to automatically update output file name (Graph tab),\
+-> Better legend editing (Legend tab),\
+-> Project settings and files in form of zip files,\
+-> Full documentation in form of a README file.
+
+----
+
 ## v. 0.2.1 - hotfix
 25.08.2022
 
