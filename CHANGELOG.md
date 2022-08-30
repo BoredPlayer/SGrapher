@@ -1,5 +1,29 @@
 # Change log
 
+## v. 0.2.4 - And the updates kept coming...
+30.08.2022
+
+This is a big one - finally the legend editing has some meaningful updates! Since this version, you can edit line width and opacity. However, you don't have to do it anymore with those pesky buttons at the bottom of the window! **Just doubleclick at the value you want to change and write whatever you need there to be**! No strings attached, at least that I would know of. Keep an eye on the `Known bugs` section.
+
+This means, that the `Better legend editing` milestone is finally achieved! :tada:
+
+This version required some changes to `matgrapher` library, so please, update it with wathever method you find the most suitable or with pip command:
+```python
+pip install git+https://github.com/BoredPlayer/matgrapher.git
+```
+
+Bug fixes:\
+-> _No bugs were hurt during making of this update._
+
+Known bugs:
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to UTF-8.
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Grid options (Graph tab),\
+-> Project settings and files in form of zip files,\
+-> Full documentation in form of a README file.
+
 ## v. 0.2.3a - multiplatform hotfix
 30.08.2022
 

@@ -16,7 +16,7 @@ from modules.projectexporter import SGProjectExporter as sgp
 
 class LegendEdit(QWidget):
 
-    DATATYPE, DATANAME, DATALEGEND, DATASTYLE, DATACOLOR = range(5)
+    DATATYPE, DATANAME, DATALEGEND, DATASTYLE, DATACOLOR, DATAWIDTH, DATAALPHA = range(7)
 
     def __init__(self):
         super().__init__()
@@ -44,9 +44,16 @@ class LegendEdit(QWidget):
         dataLayout.addWidget(self.dataView)
         self.dataGroupBox.setLayout(dataLayout)
 
-        model = self.createModel(self)
-        self.dataView.setModel(model)
+        self.model = self.createModel(self)
+        self.dataView.setModel(self.model)
         self.updateListView()
+
+        self.dataView.setColumnWidth(self.DATATYPE, 8)
+        self.dataView.setColumnWidth(self.DATALEGEND, 150)
+        self.dataView.setColumnWidth(self.DATASTYLE, 5)
+        self.dataView.doubleClicked.connect(self.setUpdateButtonEditable)
+
+        self.dataView.model().dataChanged.connect(self.getModelData)
 
         self.createUpdateButton()
 
@@ -70,11 +77,19 @@ class LegendEdit(QWidget):
         self.colorButton = QPushButton("Edit color")
         self.colorButton.clicked.connect(self.getNewColor)
 
+        self.updateButton = QPushButton("Save changes")
+        self.updateButton.clicked.connect(self.getModelData)
+        self.updateButton.setEnabled(False)
+
         layout.addWidget(self.legendButton)
         layout.addWidget(self.styleButton)
         layout.addWidget(self.colorButton)
+        layout.addWidget(self.updateButton)
 
         self.buttonGroupBox.setLayout(layout)
+
+    def setUpdateButtonEditable(self):
+        self.updateButton.setEnabled(True)
 
     def getNew(self, legend=False, color=False, style=False):
         sIdx = self.dataView.selectedIndexes()[0]
@@ -135,26 +150,50 @@ class LegendEdit(QWidget):
             self.updateData()
 
     def createModel(self, parent):
-        model = QStandardItemModel(0, 5, parent)
+        model = QStandardItemModel(0, 7, parent)
         model.setHeaderData(self.DATATYPE, Qt.Horizontal, "Type")
         model.setHeaderData(self.DATANAME, Qt.Horizontal, "Dataset name")
         model.setHeaderData(self.DATALEGEND, Qt.Horizontal, "Legend")
         model.setHeaderData(self.DATASTYLE, Qt.Horizontal, "Style")
         model.setHeaderData(self.DATACOLOR, Qt.Horizontal, "Color")
+        model.setHeaderData(self.DATAWIDTH, Qt.Horizontal, "Line width")
+        model.setHeaderData(self.DATAALPHA, Qt.Horizontal, "Opacity")
         return model
-    
-    def addEntry(self, model, datatype, dataname, datalegend, datastyle, datacolor):
+
+    def getModelData(self):
+        for o in range(len(self.project)):
+            print(f"Model legend [{o}]: {self.dataView.model().item(o, self.DATALEGEND).text()}")
+            self.project.setLegend(self.dataView.model().item(o, self.DATALEGEND).text(), fileindex=o)
+            self.project.setColor(self.dataView.model().item(o, self.DATACOLOR).text(), fileindex=o)
+            self.project.setLineStyle(self.dataView.model().item(o, self.DATASTYLE).text(), fileindex=o)
+            self.project.setLineWidth(self.dataView.model().item(o, self.DATAWIDTH).text(), fileindex=o)
+            self.project.setLineAlpha(self.dataView.model().item(o, self.DATAALPHA).text(), fileindex=o)
+            
+        self.updateButton.setEnabled(False)
+
+    def addEntry(self, model, datatype, dataname, datalegend, datastyle, datacolor, datawidth, dataalpha):
         model.insertRow(0)
         model.setData(model.index(0, self.DATATYPE), datatype)
         model.setData(model.index(0, self.DATANAME), dataname)
         model.setData(model.index(0, self.DATALEGEND), datalegend)
         model.setData(model.index(0, self.DATASTYLE), datastyle)
         model.setData(model.index(0, self.DATACOLOR), datacolor)
+        model.setData(model.index(0, self.DATAWIDTH), datawidth)
+        model.setData(model.index(0, self.DATAALPHA), dataalpha)
     
     def updateListView(self):
-        model = self.createModel(self)
-        self.dataView.setModel(model)
+        self.model = self.createModel(self)
+        self.dataView.setModel(self.model)
 
         for o in range(len(self.project.filelist)):
             i = len(self.project.filelist) - o - 1
-            self.addEntry(model, self.project.namelist[i], self.project.filelist[i].split("/")[-1], self.project.getLegend(i), self.project.getLineStyle(i), self.project.getLineColor(i))
+            self.addEntry(self.model,
+                          self.project.namelist[i],
+                          self.project.filelist[i].split("/")[-1],
+                          self.project.getLegend(i),
+                          self.project.getLineStyle(i),
+                          self.project.getLineColor(i),
+                          self.project.getLineWidth(i),
+                          self.project.getLineAlpha(i)
+                )
+        self.model.dataChanged.connect(self.getModelData)

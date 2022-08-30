@@ -84,6 +84,8 @@ def main():
             print(gr.labels)
             gr.loadLineStyles(project.getLineStyle(i))
             gr.loadColor(project.getLineColor(i))
+            gr.changeLineWidth(project.getLineWidth(i))
+            gr.changeLineAlpha(project.getLineAlpha(i))
     gr.generateGraph(axis_names=project.getAxisNames(),
                      x_lim=project.getDomainXSize(),
                      y_lim=project.getDomainYSize(),

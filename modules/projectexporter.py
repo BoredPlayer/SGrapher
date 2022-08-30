@@ -13,6 +13,8 @@ class SGProjectExporter():
         self.styles = []# stores list of line styles
         self.colors = []# stores list of colors
         self.namelist = []# stores names of file types
+        self.widthlist = []# stores widths of lines
+        self.alphalist = []# stores opacity of lines
         self.PROJECTCREATED = ""
         self.PROJECTUPDATED = ""
         self.OUTPUTGRAPHFILENAME = ""
@@ -111,6 +113,22 @@ class SGProjectExporter():
                         self.colors.append(ls[4])
                     else:
                         self.colors.append(None)
+                    if(len(ls)>5):
+                        try:
+                            self.widthlist.append(float(ls[5]))
+                        except:
+                            print(f"Warning: Could not read line width at line {linenum}!\nSetting line width to 1.3")
+                            self.widthlist.append(1.3)
+                    else:
+                        self.widthlist.append(1.3)
+                    if(len(ls)>6):
+                        try:
+                            self.alphalist.append(float(ls[6]))
+                        except:
+                            print(f"Warning: Could not read line opacity at line {linenum}!\nSetting opacity to 1.0")
+                            self.alphalist.append(1.0)
+                    else:
+                        self.alphalist.append(1.0)
                     self.len = self.len+1
                     knowncommand = True
                 if(ll[0] == "OUTPUTGRAPHFILENAME"):
@@ -257,6 +275,18 @@ class SGProjectExporter():
             return self.legends[fileindex]
         except:
             return ""
+
+    def getLineAlpha(self, fileindex):
+        try:
+            return self.alphalist[fileindex]
+        except:
+            return 1.0
+    
+    def getLineWidth(self, fileindex):
+        try:
+            return self.widthlist[fileindex]
+        except:
+            return 1.3
         
     def getGraphFileName(self):
         '''
@@ -311,6 +341,18 @@ class SGProjectExporter():
             self.styles.append(style)
         else:
             self.styles[fileindex] = style
+    
+    def setLineWidth(self, width, fileindex=None):
+        if(not isinstance(fileindex, int)):
+            self.widthlist.append(width)
+        else:
+            self.widthlist[fileindex] = width
+
+    def setLineAlpha(self, alpha, fileindex=None):
+        if(not isinstance(fileindex, int)):
+            self.alphalist.append(alpha)
+        else:
+            self.alphalist[fileindex] = alpha
 
     def setSavingGraph(self, savegraph = True):
         '''
@@ -451,8 +493,9 @@ class SGProjectExporter():
         for i in range(len(self.typelist[0])):
             file.write(f"DATATYPE={self.typelist[0][i]}\t{self.typelist[1][i]}\n")
         file.write("# \n# Files to read\n")
+        file.write("#\tfile type\tfile path\tlegend\tline style\tline color\tline width\tline opacity\n")
         for i in range(len(self.filelist)):
-            file.write(f"FILE={self.namelist[i]}\t{self.filelist[i]}\t{self.legends[i]}\t{self.styles[i]}\t{self.colors[i]}\n")
+            file.write(f"FILE={self.namelist[i]}\t{self.filelist[i]}\t{self.legends[i]}\t{self.styles[i]}\t{self.colors[i]}\t{self.widthlist[i]}\t{self.alphalist[i]}\n")
         file.write("# \n# --- GRAPH SETTINGS ---\n# Output file name\n")
         file.write(f"OUTPUTGRAPHFILENAME={self.OUTPUTGRAPHFILENAME}\n")
         file.write("# \n# Graph DPI\n")
@@ -500,6 +543,8 @@ class SGProjectExporter():
         self.styles = self.moveOneUP(self.styles, index)
         self.colors = self.moveOneUP(self.colors, index)
         self.namelist = self.moveOneUP(self.namelist, index)
+        self.widthlist = self.moveOneUP(self.widthlist, index)
+        self.alphalist = self.moveOneUP(self.alphalist, index)
             
     def moveEntryDOWN(self, index):
         self.filelist = self.moveOneDOWN(self.filelist, index)
@@ -507,6 +552,8 @@ class SGProjectExporter():
         self.styles = self.moveOneDOWN(self.styles, index)
         self.colors = self.moveOneDOWN(self.colors, index)
         self.namelist = self.moveOneDOWN(self.namelist, index)
+        self.widthlist = self.moveOneDOWN(self.widthlist, index)
+        self.alphalist = self.moveOneDOWN(self.alphalist, index)
 
     def removeEntry(self, index):
         if(index<len(self.filelist)):
@@ -515,8 +562,10 @@ class SGProjectExporter():
             self.styles.pop(index)
             self.colors.pop(index)
             self.namelist.pop(index)
+            self.widthlist.pop(index)
+            self.alphalist.pop(index)
 
-    def updateArrays(self, filelist=None, namelist=None, typelist=None, legends=None, styles=None):
+    def updateArrays(self, filelist=None, namelist=None, typelist=None, legends=None, styles=None, widths=None, alphas=None):
         print("Updating arrays")
         if(isinstance(filelist, list)):
             self.filelist = filelist
@@ -529,6 +578,8 @@ class SGProjectExporter():
             self.legends = legends
         if(isinstance(styles, list)):
             self.styles = styles
+        if(isinstance(styles, list)):
+            self.widthlist = widths
 
     def readData(self, filename, separationChar = ' ', labelSeparationChar = ' ', stringTerminator = '"', returnLabels = False, lessInfo = True):
         '''
