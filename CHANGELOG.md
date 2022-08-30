@@ -13,9 +13,9 @@ pip install git+https://github.com/BoredPlayer/matgrapher.git
 ```
 
 Bug fixes:\
--> _No bugs were harmed during making of this update._
+-> _No bugs were harmed during the production of this update._
 
-Known bugs:
+Known bugs:\
 -> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to UTF-8.
 
 Next milestones:\
@@ -23,6 +23,8 @@ Next milestones:\
 -> Grid options (Graph tab),\
 -> Project settings and files in form of zip files,\
 -> Full documentation in form of a README file.
+
+---
 
 ## v. 0.2.3a - multiplatform hotfix
 30.08.2022
@@ -33,7 +35,7 @@ Bugfixes:
 -> Graphing engine execution is now os-dependant\
 -> Title no longer broken by `=` sign.
 
-Known bugs:
+Known bugs:\
 -> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to UTF-8.
 
 Next milestones:\
@@ -42,6 +44,8 @@ Next milestones:\
 -> Better legend editing (Legend tab),\
 -> Project settings and files in form of zip files,\
 -> Full documentation in form of a README file.
+
+---
 
 ## v. 0.2.3 - Quality of life update
 30.08.2022
@@ -60,6 +64,8 @@ Next milestones:\
 -> Better legend editing (Legend tab),\
 -> Project settings and files in form of zip files,\
 -> Full documentation in form of a README file.
+
+---
 
 ## v. 0.2.2 - data exploder and minor bugfixes
 26.08.2022
