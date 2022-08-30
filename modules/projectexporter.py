@@ -15,6 +15,7 @@ class SGProjectExporter():
         self.namelist = []# stores names of file types
         self.widthlist = []# stores widths of lines
         self.alphalist = []# stores opacity of lines
+        self.defaultWidth = 1.2
         self.PROJECTCREATED = ""
         self.PROJECTUPDATED = ""
         self.OUTPUTGRAPHFILENAME = ""
@@ -233,7 +234,55 @@ class SGProjectExporter():
                 print("Error: Wrong domain values.\nSetting domain Y range to [0, 1]")
                 self.OUTPUTDOMAINMAXY = 0.0
                 self.OUTPUTDOMAINMINY = 1.0
-    
+
+    def addDataFile(self, filename, filetype, legend=None, style=None, color=None, width=None, alpha=None):
+        if(filename in self.filelist):
+            print("Warning: This file already exists in list!")
+        if(isinstance(filename, str)):
+            self.filelist.append(filename)
+        else:
+            print(f"Warning: Wrong type of filename. Expected str, got {type(filename)}")
+        if(isinstance(filetype, str)):
+            self.namelist.append(filetype)
+        else:
+            print(f"Warning: Wrong type of filetype. Expected str, got {type(filetype)}")
+        if(legend==None):
+            self.legends.append(filename.split("/")[-1])
+        else:
+            if(isinstance(legend, str)):
+                self.legends.append(legend)
+            else:
+                print(f"Warning: Wrong type of legend. Expected str, got {type(legend)}")
+        if(style==None):
+            self.styles.append("-")
+        else:
+            if(isinstance(style, str)):
+                self.styles.append(style)
+            else:
+                print(f"Warning: Wrong type of style. Expected str, got {type(legend)}")
+        if(color==None):
+            self.colors.append("black")
+        else:
+            if(isinstance(color, str)):
+                self.colors.append(color)
+            else:
+                print(f"Warning: Wrong type of color. Expected str, got {type(legend)}")
+        if(width==None):
+            self.widthlist.append(self.defaultWidth)
+        else:
+            if(isinstance(width, float) or isinstance(width, int)):
+                self.widthlist.append(width)
+            else:
+                print(f"Warning: Wrong type of width. Expected float or int, got {type(legend)}")
+        if(alpha==None):
+            self.alphalist.append(1.0)
+        else:
+            if(isinstance(width, float) or isinstance(width, int)):
+                self.alphalist.append(alpha)
+            else:
+                print(f"Warning: Wrong type of alpha. Expected float or int, got {type(legend)}")
+        self.len+=1
+
     def getDomainXSize(self):
         '''
         Function returning array of domain X-axis size.
@@ -564,6 +613,7 @@ class SGProjectExporter():
             self.namelist.pop(index)
             self.widthlist.pop(index)
             self.alphalist.pop(index)
+            self.len -= 1
 
     def updateArrays(self, filelist=None, namelist=None, typelist=None, legends=None, styles=None, widths=None, alphas=None):
         print("Updating arrays")

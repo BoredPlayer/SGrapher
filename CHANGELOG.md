@@ -1,5 +1,22 @@
 # Change log
 
+## v. 0.2.5 - width and alpha bugfixes.
+
+With the changes of the last update, some new bugs were introduced. Namely - there was no way to save a project, that was created before v. 0.2.4 and loaded. The reason was that alpha and width values were not set properely in project object during loading a project file without the aforementioned values being explicit. This bug required a brand new file loading system in project objects, bringing a dedicated method: SGProjectExporter.addDataFile(). This method automatically fills all the required arrays with default values if none besides filename and filetype are specified.\
+Moreover, the project is now not cleared until a new project is selected.
+
+Bugfixes:\
+-> No more crashing during loading of an old (pre v. 0.2.4) project file.
+
+Known bugs:\
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to UTF-8.
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Grid options (Graph tab),\
+-> Project settings and files in form of zip files,\
+-> Full documentation in form of a README file.
+
 ## v. 0.2.4 - And the updates kept coming...
 30.08.2022
 

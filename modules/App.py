@@ -137,7 +137,7 @@ class App(QWidget):
         if(self.showDataTypes):
             for o in range(len(self.typelist[0])):
                 i = len(self.typelist[0]) - o - 1
-                self.addListFile(model, f"{self.typelist[0][i]}", f"{self.typelist[1][i]}", "")
+                self.addListFile(model, f"{self.project.typelist[0][i]}", f"{self.project.typelist[1][i]}", "")
             self.addListFile(model, f"Data type", f"Data type description", "")
             self.addListFile(model, "-----", "-----", "-----")
         self.addListFile(model, "Graph generator", self.project.runpath.split("/")[-1], f"{self.project.runpath}")
@@ -145,7 +145,7 @@ class App(QWidget):
 
         for o in range(len(self.namelist)):
             i = len(self.namelist) - o - 1
-            self.addListFile(model, self.typelist[1][self.typelist[0].index(self.namelist[i])], self.filelist[i].split("/")[-1], self.filelist[i])
+            self.addListFile(model, self.project.typelist[1][self.project.typelist[0].index(self.project.namelist[i])], self.project.filelist[i].split("/")[-1], self.project.filelist[i])
     
     def toggleDataTypes(self):
         if(self.showDataTypes):
@@ -183,10 +183,7 @@ class App(QWidget):
                 #self.namelist.append(None)
                 self.namelist.append(self.getFileType())
             print(f"New file: {self.filelist[-1].split('/')[-1]}\ttype: {self.namelist[-1]}")
-            self.project.updateArrays(filelist=self.filelist, namelist=self.namelist)
-            self.project.setColor('black')
-            self.project.setLineStyle('-')
-            self.project.setLegend('')
+            self.project.addDataFile(filename, self.namelist[-1])
             self.updateListView()
 
     def openFileNameDialogForList(self):
@@ -273,6 +270,7 @@ class App(QWidget):
         #options |= QFileDialog.DontUseNativeDialog
         filename, _ = QFileDialog.getOpenFileName(self, "Select project", "", "SGrapher files (*.sgp)", options=options)
         if filename:
+            self.clearProject()
             self.project.setFileName(filename)
             self.project.loadProject()
             self.runpath = self.project.runpath

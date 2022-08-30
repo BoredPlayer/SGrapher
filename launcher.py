@@ -171,12 +171,14 @@ class MainWindow(QMainWindow):
         Function repairing not updating projects throughout
         tabs after loading new project from other tab.
         '''
-        self.widget.FileTab.clearProject()
-        self.updateAllTabs()
+        #self.widget.FileTab.clearProject()
+        #self.updateAllTabs()
         self.widget.FileTab.rldFile()
+        self.previousTab = 0
         #self.previousProject = copy(self.widget.FileTab.getProject())
         #self.widget.GraphTab.setProject(self.previousProject)
         self.updateAllTabs()
+        self.previousTab = self.currentTab
         self.widget.GraphTab.reloadText()
         self.widget.LegendTab.setProject(self.previousProject)
         self.widget.LegendTab.updateListView()
