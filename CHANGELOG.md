@@ -1,5 +1,23 @@
 # Change log
 
+## v. 0.2.3 - Quality of life update
+30.08.2022
+
+This version fixes major bugs in `Graph settings` and `Legend settings` tabs. Also, the project is now cleared during loading of a new `.sgp` file. New milestone achieved! :tada:\
+Another upgrade is, that the file selection will be performed with native file dialog, which I often find much easier to use, than Qt5's one.
+
+Bug fixes:\
+-> No more crashing file emptying `Graph width` and `Graph heights` text boxes,\
+-> File path to graph image auto-updates when edited via text box in `Graph settings` tab.\
+-> Deleting file from project will no longer mess up legend.
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Grid options (Graph tab),\
+-> Better legend editing (Legend tab),\
+-> Project settings and files in form of zip files,\
+-> Full documentation in form of a README file.
+
 ## v. 0.2.2 - data exploder and minor bugfixes
 26.08.2022
 

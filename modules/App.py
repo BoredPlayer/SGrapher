@@ -270,7 +270,7 @@ class App(QWidget):
 
     def readProject(self):
         options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
+        #options |= QFileDialog.DontUseNativeDialog
         filename, _ = QFileDialog.getOpenFileName(self, "Select project", "", "SGrapher files (*.sgp)", options=options)
         if filename:
             self.project.setFileName(filename)
@@ -407,6 +407,7 @@ class App(QWidget):
         mdlIdx=cr
         self.filelist.pop(mdlIdx)
         self.namelist.pop(mdlIdx)
+        self.project.removeEntry(mdlIdx)
         self.updateListView()
     
     def toggleShowSaving(self):

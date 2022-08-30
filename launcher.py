@@ -148,6 +148,10 @@ class MainWindow(QMainWindow):
         Function repairing not saving current project
         via 'Ctrl+S' shortcut.
         '''
+        self.updateAllTabs()
+        self.widget.FileTab.svFile()
+
+    def updateAllTabs(self):
         if(self.previousTab == 0):
             self.previousProject = copy(self.widget.FileTab.getProject())
             print("Loading project from File Tab")
@@ -159,16 +163,20 @@ class MainWindow(QMainWindow):
             print("Loading project from Legend Tab")
         
         self.widget.FileTab.setProject(self.previousProject)
-        self.widget.FileTab.svFile()
+        self.widget.GraphTab.setProject(self.previousProject)
+        self.widget.LegendTab.setProject(self.previousProject)
 
     def loadNewProject(self):
         '''
         Function repairing not updating projects throughout
         tabs after loading new project from other tab.
         '''
+        self.widget.FileTab.clearProject()
+        self.updateAllTabs()
         self.widget.FileTab.rldFile()
-        self.previousProject = copy(self.widget.FileTab.getProject())
-        self.widget.GraphTab.setProject(self.previousProject)
+        #self.previousProject = copy(self.widget.FileTab.getProject())
+        #self.widget.GraphTab.setProject(self.previousProject)
+        self.updateAllTabs()
         self.widget.GraphTab.reloadText()
         self.widget.LegendTab.setProject(self.previousProject)
         self.widget.LegendTab.updateListView()

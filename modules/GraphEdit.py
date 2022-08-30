@@ -128,6 +128,8 @@ class GraphEdit(QWidget):
         self.fileSettingsBox = QGroupBox("File settings")
         layout = QHBoxLayout()
         self.outputfilename = QLineEdit(str(self.project.OUTPUTGRAPHFILENAME))
+        self.outputfilename.textChanged.connect(self.onLineChanged)
+        
         self.searchForFileButton = QPushButton("Set directory")
         self.searchForFileButton.clicked.connect(self.dialogWindow)
         layout.addWidget(self.outputfilename)
@@ -203,9 +205,18 @@ class GraphEdit(QWidget):
         self.toggleDataEditing(True)
 
     def updateData(self):
-        self.project.OUTPUTGRAPHHEIGHT = float(self.imageheightline.text())
-        self.project.OUTPUTGRAPHWIDTH = float(self.imagewidthline.text())
-        self.project.OUTPUTGRAPHDPI = float(self.imagedpi.text())
+        try:
+            self.project.OUTPUTGRAPHHEIGHT = float(self.imageheightline.text())
+        except:
+            self.project.OUTPUTGRAPHHEIGHT = 0.0
+        try:
+            self.project.OUTPUTGRAPHWIDTH = float(self.imagewidthline.text())
+        except:
+            self.project.OUTPUTGRAPHWIDTH = 0.0
+        try:
+            self.project.OUTPUTGRAPHDPI = float(self.imagedpi.text())
+        except:
+            self.project.OUTPUTGRAPHDPI = 0.0
         self.project.setDomainSize(self.domainminx.text(), self.domainmaxx.text(), self.domainminy.text(), self.domainmaxy.text())
         self.project.OUTPUTGRAPHTITLE = self.imagetitle.text()
         self.project.OUTPUTGRAPHXAXISNAME = self.xaxisname.text()

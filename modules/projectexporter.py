@@ -496,6 +496,14 @@ class SGProjectExporter():
         self.colors = self.moveOneDOWN(self.colors, index)
         self.namelist = self.moveOneDOWN(self.namelist, index)
 
+    def removeEntry(self, index):
+        if(index<len(self.filelist)):
+            self.filelist.pop(index)
+            self.legends.pop(index)
+            self.styles.pop(index)
+            self.colors.pop(index)
+            self.namelist.pop(index)
+
     def updateArrays(self, filelist=None, namelist=None, typelist=None, legends=None, styles=None):
         print("Updating arrays")
         if(isinstance(filelist, list)):
