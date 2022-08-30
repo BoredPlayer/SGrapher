@@ -1,5 +1,24 @@
 # Change log
 
+## v. 0.2.3a - multiplatform hotfix
+30.08.2022
+
+This version is a result of a realisation, that `python` and `python3` are completly separate things in most of linux distros. It fixes graphing engine execution on linux. Moreover, the `=` sign will no longer break graph title while reloading project.
+
+Bugfixes:
+-> Graphing engine execution is now os-dependant\
+-> Title no longer broken by `=` sign.
+
+Known bugs:
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to UTF-8.
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Grid options (Graph tab),\
+-> Better legend editing (Legend tab),\
+-> Project settings and files in form of zip files,\
+-> Full documentation in form of a README file.
+
 ## v. 0.2.3 - Quality of life update
 30.08.2022
 

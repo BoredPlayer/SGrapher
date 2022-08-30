@@ -1,6 +1,7 @@
 from os.path import isfile
 import time
 from copy import deepcopy as copy
+import sys
 
 class SGProjectExporter():
     def __init__(self, filename=None):
@@ -29,6 +30,12 @@ class SGProjectExporter():
         self.OUTPUTDOMAINLOGSCALE = 'none'
         self.FORCEGRAPHLOGSCALE = 'none'
         self.len = 0
+
+        if sys.platform.startswith('linux'):
+            self.python_exec = "python3"
+        elif sys.platform.startswith('win32'):
+            self.python_exec = "python"
+
         if(filename is not None):
             self.setFileName(filename)
             self.loadProject()
@@ -119,7 +126,12 @@ class SGProjectExporter():
                     self.OUTPUTGRAPHSAVETOGGLE = ll[1]
                     knowncommand = True
                 if(ll[0] == "OUTPUTGRAPHTITLE"):
-                    self.setGraphTitle(ll[1])
+                    lmk = ll[1]
+                    # This part fixes bug destroing file notation
+                    # in project, when '=' sign is used in legend.
+                    if(len(ll)>2):
+                        lmk = '='.join(ll[1:])
+                    self.setGraphTitle(lmk)
                     knowncommand = True
                 if(ll[0] == "OUTPUTGRAPHXAXISNAME"):
                     self.OUTPUTGRAPHXAXISNAME = ll[1]

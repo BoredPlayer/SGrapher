@@ -32,6 +32,13 @@ def main():
                                     returnLabels=True,
                                     lessInfo=True
                 )
+        if('.txt' in project.filelist[i]):
+            #assume, that .txt file also come from ANSYS Fluent
+            flabels, fcontent = project.readData(filename=project.filelist[i],
+                                    separationChar=" ",
+                                    returnLabels=True,
+                                    lessInfo=True
+                )
         if('.csv' in project.filelist[i]):
             flabels, fcontent = project.readData(filename=project.filelist[i],
                                     separationChar=",",

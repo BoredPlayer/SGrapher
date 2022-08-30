@@ -338,7 +338,7 @@ class App(QWidget):
 
     def runGenerator(self):
         try:
-            p1 = subprocess.Popen(["python", self.runpath,"-p",str(self.project.filename)])
+            p1 = subprocess.Popen([self.project.python_exec, self.runpath,"-p",str(self.project.filename)])
             while(p1.returncode is None):
                 p1.poll()
             QMessageBox.question(self, "Message", "Graph generator has finished.", QMessageBox.Ok)
