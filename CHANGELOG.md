@@ -1,5 +1,24 @@
 # Change log
 
+v. 0.2.6 - some new data edition
+
+This update provides some small upgrades to `rescaledata.py` module, ammending command line options with normalising and scaling data. To be honest it's a bit half-baked, but there was little time to make it a general update like `v.0.2.4`. Works only with exploded files (for now).
+
+Bug fixes:\
+-> _No bugs were harmed during the production of this update._
+
+Known bugs:\
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to ANSI.
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Data editing options (new tab, project exporter),\
+-> Grid options (Graph tab),\
+-> Project settings and files in form of zip or binary files,\
+-> Full documentation in form of a README file.
+
+---
+
 ## v. 0.2.5 - width and alpha bugfixes.
 
 With the changes of the last update, some new bugs were introduced. Namely - there was no way to save a project, that was created before v. 0.2.4 and loaded. The reason was that alpha and width values were not set properely in project object during loading a project file without the aforementioned values being explicit. This bug required a brand new file loading system in project objects, bringing a dedicated method: SGProjectExporter.addDataFile(). This method automatically fills all the required arrays with default values if none besides filename and filetype are specified.\
@@ -17,6 +36,8 @@ Next milestones:\
 -> Project settings and files in form of zip files,\
 -> Full documentation in form of a README file.
 
+---
+
 ## v. 0.2.4 - And the updates kept coming...
 30.08.2022
 
@@ -33,7 +54,7 @@ Bug fixes:\
 -> _No bugs were harmed during the production of this update._
 
 Known bugs:\
--> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to UTF-8.
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to ANSI.
 
 Next milestones:\
 -> Project autosaving (general),\
@@ -53,7 +74,7 @@ Bugfixes:
 -> Title no longer broken by `=` sign.
 
 Known bugs:\
--> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to UTF-8.
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to ANSI.
 
 Next milestones:\
 -> Project autosaving (general),\

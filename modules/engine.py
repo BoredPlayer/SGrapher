@@ -28,7 +28,8 @@ def main():
     for i in range(len(project)):
         if('.xy' in project.filelist[i]):
             flabels, fcontent = project.readData(filename=project.filelist[i],
-                                    separationChar=" ",
+                                    separationChar="\t",
+                                    labelSeparationChar=" ",
                                     returnLabels=True,
                                     lessInfo=True
                 )

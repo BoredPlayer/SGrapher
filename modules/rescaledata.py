@@ -8,18 +8,24 @@ except:
     from projectexporter import SGProjectExporter as sgp
 
 def loadPorject(project_filename):
-    print("Loading data from launcher.")
+    print("Loading data from launcher. Project: "+project_filename)
     if(project_filename[-3:]=="sgp"):
         project = sgp(filename=project_filename)
+        print("Loaded filenames:")
+        for i in range(len(project)):
+            print(f"[{i}]\t{project.filelist[i]}")
         return project
     return None
 
 def main():
-    labelseparator = ","
+    labelseparator = " "
+    project=None
     if("-p" in sys.argv):
         project = loadPorject(sys.argv[sys.argv.index("-p")+1])
     if(project!=None):
+        print("Received project. Iterating filenames.")
         for i in range(len(project)):
+            print("Opening filename: "+project.filelist[i])
             file = open("_edited.".join(project.filelist[i].split(".")), "w")
             if('.xy' in project.filelist[i]):
                 flabels, fcontent = project.readData(filename=project.filelist[i],
@@ -34,15 +40,44 @@ def main():
                                     returnLabels=True,
                                     lessInfo=True
                     )
+            if('.txt' in project.filelist[i]):
+                flabels, fcontent = project.readData(filename=project.filelist[i],
+                                    separationChar=" ",
+                                    labelSeparationChar=" ",
+                                    returnLabels=True,
+                                    lessInfo=True
+                    )
             #fcontent = np.asarray(fcontent)
+            print("flabels:")
+            print(flabels)
             for o in range(len(flabels)):
                 if(o<len(flabels)-1):
                     lcontent = np.asarray(fcontent)[:, flabels[o][0]:flabels[o+1][0]]
                 else:
                     lcontent = np.asarray(fcontent)[:, flabels[o][0]:]
                 print(lcontent[0, :])
-                lcontent[0, :] = (lcontent[0, :]-np.min(lcontent[0, :]))/(np.max(lcontent[0, :])-np.min(lcontent[0, :]))
-                lcontent = np.transpose(lcontent)
+                print("Arguments:")
+                print(sys.argv[1:])
+                if("--normalise-x" in sys.argv):
+                    lcontent[0, :] = (lcontent[0, :]-np.min(lcontent[0, :]))/(np.max(lcontent[0, :])-np.min(lcontent[0, :]))
+                    lcontent = np.transpose(lcontent)
+                if("--normalise-y" in sys.argv):
+                    lcontent[1, :] = (lcontent[1, :]-np.min(lcontent[1, :]))/(np.max(lcontent[1, :])-np.min(lcontent[1, :]))
+                    lcontent = np.transpose(lcontent)
+                if("--scale-x" in sys.argv):
+                    try:
+                        scalar = float(sys.argv[sys.argv.index("--scale-x")+1])
+                    except:
+                        print("Error: Could not convert x-scaling factor \""+sys.argv[sys.argv.index("--scale-x")+1]+"\" to float.")
+                    lcontent[0, :] = lcontent[0, :]*scalar
+                    lcontent = np.transpose(lcontent)
+                if("--scale-y" in sys.argv):
+                    try:
+                        scalar = float(sys.argv[sys.argv.index("--scale-y")+1])
+                    except:
+                        print(f"Error: Could not convert x-scaling factor \""+sys.argv[sys.argv.index("--scale-y")+1]+"\" to float.")
+                    lcontent[1, :] = lcontent[1, :]*scalar
+                    lcontent = np.transpose(lcontent)
                 print(f"flabels:{flabels[o]}")
                 for j in range(len(flabels[o])-1):
                     file.write(f"{flabels[o][j+1]}")
