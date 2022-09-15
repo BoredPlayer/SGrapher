@@ -1,6 +1,30 @@
 # Change log
 
-v. 0.2.6 - some new data edition
+## v. 0.2.7 - data rescaling, default types and bug fixes
+
+`rescaledata.py` finally accepts individual files, instead of full project. Just type `-f` and paths to files (yes, even multiple, just separate them with ` ` (space) sign). If you provide `-d` or `--path` flag, you can specify the main path, and the files will be searched in the specified folder. This also applies to project files.\
+The `SGProjectExporter` class from now on supports file types auto-generation. This is used to provide a smooth experience during loading individual files during rescaling.
+
+Bug fixes:\
+-> You can cancel loading new file from type choicebox without the app crashing. Yes, this was a bug and I'm ashamed for it.\
+-> `rescaledata.py` does not change separation char of data anymore.
+
+Known bugs:\
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to ANSI.\
+-> When a new project is saved from tab other than `Files`, a "save project as" dialog opens after each consecutive save.\
+-> `Project->Toggle showing/saving graph` sometimes does not change mode. Requires further analysis.
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Data editing options (new tab, project exporter),\
+-> Live object positioning in graph - position of legend, additional texts and primitives (new tab, project exporter)\
+-> Grid options - grid on/off, density, major and minor rules, vertical/horizontal rules (Graph tab),\
+-> Project settings and files in form of zip or binary files,\
+-> Full documentation in form of a README file.
+
+---
+
+## v. 0.2.6 - some new data edition
 
 This update provides some small upgrades to `rescaledata.py` module, ammending command line options with normalising and scaling data. To be honest it's a bit half-baked, but there was little time to make it a general update like `v.0.2.4`. Works only with exploded files (for now).
 
@@ -21,7 +45,7 @@ Next milestones:\
 
 ## v. 0.2.5 - width and alpha bugfixes.
 
-With the changes of the last update, some new bugs were introduced. Namely - there was no way to save a project, that was created before v. 0.2.4 and loaded. The reason was that alpha and width values were not set properely in project object during loading a project file without the aforementioned values being explicit. This bug required a brand new file loading system in project objects, bringing a dedicated method: SGProjectExporter.addDataFile(). This method automatically fills all the required arrays with default values if none besides filename and filetype are specified.\
+With the changes of the last update, some new bugs were introduced. Namely - there was no way to save a project, that was created before v. 0.2.4 and loaded. The reason was that alpha and width values were not set properely in project object during loading a project file without the aforementioned values being explicit. This bug required a brand new file loading system in project objects, bringing a dedicated method: `SGProjectExporter.addDataFile()`. This method automatically fills all the required arrays with default values if none besides filename and filetype are specified.\
 Moreover, the project is now not cleared until a new project is selected.
 
 Bugfixes:\

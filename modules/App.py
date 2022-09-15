@@ -181,7 +181,10 @@ class App(QWidget):
                     break
             if(not foundfiletype):
                 #self.namelist.append(None)
-                self.namelist.append(self.getFileType())
+                temp_filetype = self.getFileType()
+                if(temp_filetype==None):
+                    return
+                self.namelist.append(temp_filetype)
             print(f"New file: {self.filelist[-1].split('/')[-1]}\ttype: {self.namelist[-1]}")
             self.project.addDataFile(filename, self.namelist[-1])
             self.updateListView()

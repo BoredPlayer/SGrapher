@@ -4,7 +4,7 @@ from copy import deepcopy as copy
 import sys
 
 class SGProjectExporter():
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, defaultTypes=False):
         self.filename=None
         self.runpath = "modules/engine.py"
         self.typelist = [[], []]# stores dictionary of filetypes
@@ -42,6 +42,9 @@ class SGProjectExporter():
         if(filename is not None):
             self.setFileName(filename)
             self.loadProject()
+        
+        if(defaultTypes):
+            self.insertDefaultTypes()
 
     def __len__(self):
         return self.len
@@ -69,6 +72,17 @@ class SGProjectExporter():
             print("Warning: Selected run path for graph generator is not available.")
             return 1
 
+    def insertDefaultTypes(self, numberOfTypes=1, overwrite=False):
+        if(overwrite):
+            self.clearTypelist()
+        for i in range(numberOfTypes):
+            self.typelist[0].append(f"type{i}")
+            self.typelist[1].append(f"Type {i}")
+
+    def clearTypelist(self):
+        del self.typelist[0]
+        del self.typelist[1]
+        self.typelist = [[], []]
     
     def loadProject(self, filename = None, commentSign = '#'):
         if(filename is None):
