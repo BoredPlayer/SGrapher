@@ -6,7 +6,9 @@ A simple launcher for matgrapher- and matplotlib-based graph generators. It prov
 1.1. [Dependencies](#11-dependencies)\
 1.2. [Git clone](#12-git-clone)\
 1.3. [Manual download](#13-manual-download)
-2. [Usage](#2-usage)
+2. [Usage](#2-usage)\
+2.1. [Modules](#21-modules)\
+&emsp;2.1.1. [Data rescaler](#211-rescale-data)
 
 
 ## 1. Installation
@@ -49,6 +51,30 @@ If you do not wish to have all of the repository's history stored on your comput
 After these steps SGrapher should be installed on your computer.
 
 ## 2. Usage
+
+### 2.1. Modules:
+
+The software is provided with several modules ammending basic functionality of the launcher:
+1. `rescaledata.py` - basic data manipulation such as rescaling both X and Y data axis
+2. `explodedata.py` - multiple-column data divider
+
+Currently, the functionality of the above modules is available only via TUI. In order to perform the data modification run the modules with python.
+
+#### 2.1.1. Data rescaler
+
+`rescaledata.py` provides resources for basic data manipulation. Data can be rescaled with a scalar or with function of length of symmetrical NACA airfoils. Available flags:
+
+| flag | alternative flag | comment |
+| :---:| :---: | ------- |
+| `--path` | `-d` | set path to folder containing data files |
+| `--project` | `-p` | read files from project |
+| `--files` | `-f` | read files from list |
+| `--normalise-x` | N/A | normalise all X-axis (column 0) arguments |
+| `--normalise-y` | N/A | normalise all Y-axis (column 1) values |
+| `--scale-x [float]` | N/A | scale all X-axis (column 0) arguments with a _scalar_ |
+| `--scale-y [float]` | N/A | scale all Y-axis (column 1) values with a _scalar_ |
+| `--scale-to-naca [float] [float]`| N/A | scale all X-axis (column 0) arguments to length of symmetrical NACA airfoil with its _thickness_ and _angle of attack_ (assumption: all data points are from the airfoil's surface) |
+| `--scale-from-naca [float] [float] [float]`| N/A | scale all X-axis (column 0) arguments from symmetrical NACA airfoil length to chord position with its _thickness_, _chord_, and _angle of attack_ |
 
 TODO: Complete the user guide.
 ```

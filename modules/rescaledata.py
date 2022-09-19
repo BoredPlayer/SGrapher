@@ -70,6 +70,43 @@ def findNACALength(thickness, chord, aoa, x):
     #print(f"[findNACALength] x={x}\tres={res}")
     return res
 
+def findXFromFunction(x_min, x_max, funtion, function_value, returnDelta=False, lessInfo=True, **kwargs):
+    xmin=x_min
+    xmax=chord
+    x=x_max
+    lloc = findNACALength(thickness, chord, aoa, x)
+    executable=False
+    cycler = 1
+    while(np.abs(lloc-function_value)>=epsilon):
+        executable=True
+        deltax = xmax-xmin
+        if(cycler>0):
+            x = xmax
+        if(cycler<0):
+            x = xmin
+        lloc=function(kwargs)
+        if(cycler<0 and function_value<lloc):
+            xmin=x-deltax
+            xmax = x
+            x=xmin
+            lloc=function(kwargs)
+            #cycler*=(-1)
+        if(cycler>0 and function_value>lloc):
+            xmax=x+deltax
+            xmin = x
+            x=xmax
+            lloc=function(kwargs)
+            #cycler*=(-1)
+        if(cycler<0 and function_value>lloc and executable):
+            xmax = xmin+deltax/2
+        if(cycler>0 and function_value<lloc and executable):
+            xmin = xmax-deltax/2
+        cycler=cycler*(-1)
+        if(not lessInfo):
+            print(f"x={x}\tdelta={lloc-function_value}")
+    if(returnDelta):
+        return lloc-function_value, x
+    return x
 def findLengthfromNACA(thickness, chord, aoa, l, epsilon=0.00001, returnDelta=False):
     xmin=0
     xmax=chord
@@ -123,6 +160,9 @@ def main():
         basePath = sys.argv[sys.argv.index("-d")+1]
         if(basePath[-1]!='/'):
             basePath+='/'
+    if("--project" in sys.argv):
+        project = loadPorject(basePath+sys.argv[sys.argv.index("--project")+1])
+        projectFlag = True
     if("-p" in sys.argv):
         project = loadPorject(basePath+sys.argv[sys.argv.index("-p")+1])
         projectFlag = True
