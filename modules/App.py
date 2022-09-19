@@ -118,9 +118,9 @@ class App(QWidget):
         self.model = model
         self.dataView.setModel(model)
         if(self.showDataTypes):
-            for o in range(len(self.typelist[0])):
-                i = len(self.typelist[0]) - o - 1
-                self.addListFile(model, f"{self.typelist[0][i]}", f"{self.typelist[1][i]}", "")
+            for o in range(len(self.project.typelist[0])):
+                i = len(self.project.typelist[0]) - o - 1
+                self.addListFile(model, f"{self.project.typelist[0][i]}", f"{self.project.typelist[1][i]}", "")
             self.addListFile(model, f"Data type", f"Data type description", "")
             self.addListFile(model, "-----", "-----", "-----")
         self.addListFile(model, "Graph generator", self.project.runpath.split("/")[-1], f"{self.project.runpath}")
@@ -128,15 +128,15 @@ class App(QWidget):
 
         for o in range(len(self.namelist)):
             i = len(self.namelist) - o - 1
-            self.addListFile(model, self.typelist[1][self.typelist[0].index(self.namelist[i])], self.filelist[i].split("/")[-1], self.filelist[i])
+            self.addListFile(model, self.project.typelist[1][self.project.typelist[0].index(self.namelist[i])], self.project.filelist[i].split("/")[-1], self.project.filelist[i])
     
     def updateListView(self):
         model = self.createFileModel(self)
         self.dataView.setModel(model)
 
         if(self.showDataTypes):
-            for o in range(len(self.typelist[0])):
-                i = len(self.typelist[0]) - o - 1
+            for o in range(len(self.project.typelist[0])):
+                i = len(self.project.typelist[0]) - o - 1
                 self.addListFile(model, f"{self.project.typelist[0][i]}", f"{self.project.typelist[1][i]}", "")
             self.addListFile(model, f"Data type", f"Data type description", "")
             self.addListFile(model, "-----", "-----", "-----")
@@ -232,9 +232,9 @@ class App(QWidget):
             self.updateListView()
 
     def getFileType(self):
-        item, okPressed = QInputDialog.getItem(self, "Choice box", "Choose data type:", self.typelist[1], 0, False)
+        item, okPressed = QInputDialog.getItem(self, "Choice box", "Choose data type:", self.project.typelist[1], 0, False)
         if okPressed and item:
-            return self.typelist[0][self.typelist[1].index(item)]
+            return self.project.typelist[0][self.project.typelist[1].index(item)]
     
     def prepareFile(self):
         output = open("settings/paths.sc", "w")
@@ -318,11 +318,11 @@ class App(QWidget):
     def svFile(self):
         print("Saving settings")
         # if the file is empty, show warning
-        if(len(self.typelist[0])==0):
+        if(len(self.project.typelist[0])==0):
             buttonReply = QMessageBox.question(self, "Warning", "No data types selected. Proceed?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if(buttonReply == QMessageBox.No):
                 return
-        if(len(self.filelist)==0):
+        if(len(self.project.filelist)==0):
             buttonReply = QMessageBox.question(self, "Warning", "Saving empty file. Proceed?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if(buttonReply == QMessageBox.No):
                 return
@@ -331,7 +331,7 @@ class App(QWidget):
         if(self.project.filename==None):
             if(not self.chooseExportFile()):
                 return
-        self.project.updateArrays(self.filelist, self.namelist, self.typelist)
+        #self.project.updateArrays(self.filelist, self.namelist, self.typelist)
         self.project.exportProject()
         buttonReply = QMessageBox.question(self, "Message", "File saved. Run graph generator?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if(buttonReply == QMessageBox.Yes):
@@ -356,7 +356,7 @@ class App(QWidget):
         # save project file
         #self.prepareFile()
         if (self.chooseExportFile()):
-            self.project.updateArrays(self.filelist, self.namelist, self.typelist)
+            #self.project.updateArrays(self.filelist, self.namelist, self.typelist)
             self.project.exportProject()
             buttonReply = QMessageBox.question(self, "Message", "File saved. Run graph generator?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             if(buttonReply == QMessageBox.Yes):

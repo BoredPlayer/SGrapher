@@ -117,12 +117,12 @@ def main():
     basePath = ""
     if("--path" in sys.argv):
         basePath = sys.argv[sys.argv.index("--path")+1]
-        if(basePath[-1]!='\\'):
-            basePath+='\\'
+        if(basePath[-1]!='/'):
+            basePath+='/'
     if("-d" in sys.argv):
         basePath = sys.argv[sys.argv.index("-d")+1]
-        if(basePath[-1]!='\\'):
-            basePath+='\\'
+        if(basePath[-1]!='/'):
+            basePath+='/'
     if("-p" in sys.argv):
         project = loadPorject(basePath+sys.argv[sys.argv.index("-p")+1])
         projectFlag = True

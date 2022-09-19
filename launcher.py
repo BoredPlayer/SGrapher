@@ -109,6 +109,10 @@ class MainWindow(QMainWindow):
         project_loadFileTypes.setStatusTip("Select file with list of data types")
         project_loadFileTypes.triggered.connect(self.widget.FileTab.loadFileTypes)
 
+        project_autogenerateTypes = QAction("Generate data types", self)
+        project_autogenerateTypes.setStatusTip("Automatically generate list of data types")
+        project_autogenerateTypes.triggered.connect(self.generateFileTypes)
+
         project_graphToggle_title = "Toggle showing graph"
         if(self.widget.FileTab.project.getSaveToggle(False)):
             project_graphToggle_title = "Toggle saving graph"
@@ -119,6 +123,7 @@ class MainWindow(QMainWindow):
 
         projectMenu.addAction(project_selectRunPath)
         projectMenu.addAction(project_loadFileTypes)
+        projectMenu.addAction(project_autogenerateTypes)
         projectMenu.addAction(self.project_graphToggle)
 
         view_toggleDataTypes = QAction("Show data types", self)
@@ -182,6 +187,15 @@ class MainWindow(QMainWindow):
         self.widget.GraphTab.reloadText()
         self.widget.LegendTab.setProject(self.previousProject)
         self.widget.LegendTab.updateListView()
+
+    def generateFileTypes(self):
+        self.updateAllTabs()
+        self.previousProject.insertDefaultTypes(overwrite=False)
+        self.widget.FileTab.setProject(self.previousProject)
+        self.widget.GraphTab.setProject(self.previousProject)
+        self.widget.LegendTab.setProject(self.previousProject)
+        self.widget.LegendTab.updateListView()
+        self.widget.FileTab.updateListView()
 
     def onChange(self, i):
         self.previousTab = copy(self.currentTab)

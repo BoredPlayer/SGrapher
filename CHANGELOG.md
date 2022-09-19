@@ -1,5 +1,11 @@
 # Change log
 
+## v. 0.2.8 - some fresh air
+
+This update provides a way to automatically insert new data types from GUI. If multiple data sets of the same names are inserted a counter will be initiated ammending repeating values with number of repetitions in brackets.
+
+---
+
 ## v. 0.2.7 - data rescaling, default types and bug fixes
 
 `rescaledata.py` finally accepts individual files, instead of full project. Just type `-f` and paths to files (yes, even multiple, just separate them with ` ` (space) sign). If you provide `-d` or `--path` flag, you can specify the main path, and the files will be searched in the specified folder. This also applies to project files.\

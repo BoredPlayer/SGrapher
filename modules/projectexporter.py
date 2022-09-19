@@ -76,8 +76,7 @@ class SGProjectExporter():
         if(overwrite):
             self.clearTypelist()
         for i in range(numberOfTypes):
-            self.typelist[0].append(f"type{i}")
-            self.typelist[1].append(f"Type {i}")
+            self.addDataType("type", "Type")
 
     def clearTypelist(self):
         del self.typelist[0]
@@ -104,8 +103,7 @@ class SGProjectExporter():
                     knowncommand = True
                 if(ll[0] == "DATATYPE"):
                     ls = ll[1].split("\t")
-                    self.typelist[0].append(ls[0])
-                    self.typelist[1].append(ls[1])
+                    self.addDataType(ls[0], ls[1])
                     knowncommand = True
                 if(ll[0] == "FILE"):
                     lmk = ll[1]
@@ -248,6 +246,24 @@ class SGProjectExporter():
                 print("Error: Wrong domain values.\nSetting domain Y range to [0, 1]")
                 self.OUTPUTDOMAINMAXY = 0.0
                 self.OUTPUTDOMAINMINY = 1.0
+    
+    def addDataType(self, dataTypeID, dataTypeName):
+        if(dataTypeID in self.typelist[0]):
+            loc_counter = 1
+            while(f"{dataTypeID}_({loc_counter})" in self.typelist[0]):
+                loc_counter+=1
+            self.typelist[0].append(f"{dataTypeID}_({loc_counter})")
+        else:
+            self.typelist[0].append(dataTypeID)
+        if(dataTypeName in self.typelist[1]):
+            loc_counter = 1
+            while(f"{dataTypeName} ({loc_counter})" in self.typelist[1]):
+                loc_counter+=1
+            self.typelist[1].append(f"{dataTypeName} ({loc_counter})")
+        else:
+            self.typelist[1].append(dataTypeName)
+        
+
 
     def addDataFile(self, filename, filetype, legend=None, style=None, color=None, width=None, alpha=None):
         if(filename in self.filelist):
