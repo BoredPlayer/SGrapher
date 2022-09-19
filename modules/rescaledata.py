@@ -166,6 +166,14 @@ def main():
     if("-p" in sys.argv):
         project = loadPorject(basePath+sys.argv[sys.argv.index("-p")+1])
         projectFlag = True
+    if("--files" in sys.argv):
+        project.insertDefaultTypes()
+        for i in range(sys.argv.index("-f")+1, len(sys.argv)):
+            if(sys.argv[i][0]!='-'):
+                project.addDataFile(basePath+sys.argv[i], project.typelist[0][0])
+            else:
+                break
+        projectFlag = True
     if("-f" in sys.argv):
         project.insertDefaultTypes()
         for i in range(sys.argv.index("-f")+1, len(sys.argv)):

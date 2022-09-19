@@ -1,8 +1,32 @@
 # Change log
 
-## v. 0.2.8 - some fresh air
+## v. 0.2.8 - better data modding
 
 This update provides a way to automatically insert new data types from GUI. If multiple data sets of the same names are inserted a counter will be initiated ammending repeating values with number of repetitions in brackets.
+
+A new module (`spanaverage.py`) has been added to the package. It's main function is to detect repeating (more or less) values in a column and average all the column values accordingly. The resulting files will have the same name, except a "_spanaveraged" phrase will be added before '.' sign. Level of similarity can be specified with scalar `epsilon`, which is the falf-width of the acceptance zone. In other words, the value will be averaged if it's argument will be in range $$-\varepsilon < x < \varepsilon$$ The syntax of the new module is simmilar to `rescaledata.py` module, having `-p` flag as project containing required data, `-f` as data files, `-d` as data files' directory. It also accepts `-e` or `--epsilon` as $\varepsilon$ scalar.
+
+`rescaledata.py` has been updated with a new functions for finding arguments based on fucntions, data x-axis rescaling to length of symmetrical NACA airfoils and backwords (from length of a symmetrical NACA airfoil to chord position). In order to activate this option it is necessary to pass flag:
+```shell
+$ python rescaledata.py -d "/path/to/files" -f "file_for_rescaling.xy" --scale-to-naca [airfoil thickness] [angle of attack] --normalise-x
+```
+
+Bug fixes:\
+-> _No bugs were harmed during the production of this update._
+
+Known bugs:\
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to ANSI.\
+-> When a new project is saved from tab other than `Files`, a "save project as" dialog opens after each consecutive save.\
+-> `Project->Toggle showing/saving graph` sometimes does not change mode. Requires further analysis.\
+-> Sometimes project requires reloading to be able to generate graph.
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Data editing options (new tab, project exporter),\
+-> Live object positioning in graph - position of legend, additional texts and primitives (new tab, project exporter)\
+-> Grid options - grid on/off, density, major and minor rules, vertical/horizontal rules (Graph tab),\
+-> Project settings and files in form of zip or binary files,\
+-> Full documentation in form of a README file.
 
 ---
 

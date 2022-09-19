@@ -6,12 +6,11 @@ try:
 except:
     from projectexporter import SGProjectExporter as sgp
 
-def loadPorject(project_filename):
-    print("Loading data from launcher.")
-    if(project_filename[-3:]=="sgp"):
-        project = sgp(filename=project_filename)
-        return project
-    return None
+#safe project loader
+try:
+    from modules.rescaledata import loadPorject
+except:
+    from rescaledata import loadPorject
 
 def main():
     project = sgp()

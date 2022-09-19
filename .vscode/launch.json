@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "${file}",
             //"args": ["-f", "C:/Users/user/Documents/Uczelnia/OPUS docs/prezentacje/NACA0012_2D/do_przejrzenia/Cf-DNS-bottom.csv", "C:/Users/user/Documents/Uczelnia/OPUS docs/prezentacje/NACA0012_2D/do_przejrzenia/Cf-DNS-top.csv", "C:/Users/user/Documents/Uczelnia/OPUS docs/prezentacje/NACA0012_2D/do_przejrzenia/Cf-LES-bottom.csv", "C:/Users/user/Documents/Uczelnia/OPUS docs/prezentacje/NACA0012_2D/do_przejrzenia/Cf-LES-top.csv", "--scale-y", "0.25", "--normalise-x"],
-            "args": ["-p", "/home/stasiek/Dokumenty/Uczelnia/OPUS_docs/porownanie/acou-nonacou NACA0018/cp_ac.sgp"],
+            //"args": ["-p", "/home/stasiek/Dokumenty/Uczelnia/OPUS_docs/porownanie/acou-nonacou NACA0018/cp_ac.sgp"],
+            "args": ["-d", "C:/Users/user/Documents/Uczelnia/OPUS_docs/prezentacje/NACA0012_2D/cf/tau", "-f", "DNS_x_tau.xy", "DNS_y_tau.xy", "LES_x_tau.xy", "LES_y_tau.xy", "-e", "3e-6"],
             "console": "integratedTerminal",
             "justMyCode": true
         }
