@@ -1,5 +1,27 @@
 # Change log
 
+## v. 0.2.9 - column selection!
+
+`Legend Tab` now enables choosing from which column of the file should the data be drawn! It was a really needed change, as not all files were prepared in form of two columns. This required significant changes to `SGProjectExporter` class, `LegendEdit` class, exported project design and the `engine`, as well as creation of a new class - `fileclass`. From now on, this will be the target destination for file metadata. However, even with all those changes, no backwards compatibility was broken.
+
+Moreover it is not necessary to state file types before loading the first file, as it is be generated automatically if the `file types` array is empty.
+
+Bug fixes:\
+-> Project should no longer require reloding to be visualised.\
+-> After saving from tab other than `File tab`, user is no longer prompted to select new filename.
+
+Known bugs:\
+-> Coding of project may break cross-platform compatibility. It is recommended to convert all projects to ANSI.\
+-> `Project->Toggle showing/saving graph` updates only when outside of "Graph tab"\
+
+Next milestones:\
+-> Project autosaving (general),\
+-> Data editing options (new tab, project exporter),\
+-> Live object positioning in graph - position of legend, additional texts and primitives (new tab, project exporter)\
+-> Grid options - grid on/off, density, major and minor rules, vertical/horizontal rules (Graph tab),\
+-> Project settings and files in form of zip or binary files,\
+-> Full documentation in form of a README file.
+
 ## v. 0.2.8 - better data modding
 
 This update provides a way to automatically insert new data types from GUI. If multiple data sets of the same names are inserted a counter will be initiated ammending repeating values with number of repetitions in brackets.

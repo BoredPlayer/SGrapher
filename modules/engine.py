@@ -25,36 +25,44 @@ def main():
     if("-p" in sys.argv):
         project = loadProject(sys.argv[sys.argv.index("-p")+1])
 
-    for i in range(len(project)):
-        if('.xy' in project.filelist[i]):
-            flabels, fcontent = project.readData(filename=project.filelist[i],
+    for i in range(len(project.files)):
+        if('.xy' in project.files[i].filename):
+            flabels, fcontent = project.readData(filename=project.files[i].filename,
                                     separationChar="\t",
                                     labelSeparationChar=" ",
                                     returnLabels=True,
                                     lessInfo=True
                 )
-        if('.txt' in project.filelist[i]):
+        if('.txt' in project.files[i].filename):
             #assume, that .txt file also come from ANSYS Fluent
-            flabels, fcontent = project.readData(filename=project.filelist[i],
+            flabels, fcontent = project.readData(filename=project.files[i].filename,
                                     separationChar=" ",
                                     returnLabels=True,
                                     lessInfo=True
                 )
-        if('.csv' in project.filelist[i]):
-            flabels, fcontent = project.readData(filename=project.filelist[i],
+        if('.csv' in project.files[i].filename):
+            flabels, fcontent = project.readData(filename=project.files[i].filename,
                                     separationChar=",",
+                                    returnLabels=True,
+                                    lessInfo=True
+                )
+        if('.out' in project.files[i].filename):
+            flabels, fcontent = project.readData(filename=project.files[i].filename,
+                                    separationChar=" ",
+                                    labelSeparationChar=" ",
                                     returnLabels=True,
                                     lessInfo=True
                 )
         print("flabels:")
         print(flabels)
+        columns = project.files[i].getColumns()
         for o in range(len(flabels)):
             hide_label = False
             if(o<len(flabels)-1):
                 lcontent = np.asarray(fcontent)[:, flabels[o][0]:flabels[o+1][0]]
-                lcontent = lcontent[:,lcontent[0, :].argsort()]
-                ycontent = lcontent[1, :]
-                xcontent = lcontent[0, :]
+                lcontent = lcontent[:,lcontent[columns[0], :].argsort()]
+                ycontent = lcontent[columns[1], :]
+                xcontent = lcontent[columns[0], :]
                 #gr.loadData(fcontent[0][flabels[o][0]:flabels[o+1][0]], fcontent[1][flabels[o][0]:flabels[o+1][0]])
                 if(project.isYLogScaleForced()):
                     ycontent = np.absolute(ycontent)
@@ -63,9 +71,9 @@ def main():
                 gr.loadData(xcontent, ycontent)
             else:
                 lcontent = np.asarray(fcontent)[:, flabels[o][0]:]
-                lcontent = lcontent[:, lcontent[0, :].argsort()]
-                ycontent = lcontent[1, :]
-                xcontent = lcontent[0, :]
+                lcontent = lcontent[:, lcontent[columns[0], :].argsort()]
+                ycontent = lcontent[columns[1], :]
+                xcontent = lcontent[columns[0], :]
                 #lcontent = sorted(lcontent, key=lambda lcontent: int(lcontent[0]))
                 if(project.isYLogScaleForced()):
                     ycontent = np.absolute(ycontent)

@@ -172,6 +172,9 @@ class App(QWidget):
         options |= QFileDialog.DontUseNativeDialog
         filename, _ = QFileDialog.getOpenFileName(self, "Select data file", "", "All files (*)", options=options)
         foundfiletype = False
+        if(len(self.project.typelist[0])==0):
+            self.project.insertDefaultTypes()
+            self.typelist = copy(self.project.typelist)
         if filename:
             self.filelist.append(filename)
             for i in range(len(self.typelist[0])):
@@ -329,7 +332,8 @@ class App(QWidget):
         # save project file
         #self.prepareFile()
         if(self.project.filename==None):
-            if(not self.chooseExportFile()):
+            exportFile = self.chooseExportFile()
+            if(not exportFile):
                 return
         #self.project.updateArrays(self.filelist, self.namelist, self.typelist)
         self.project.exportProject()
@@ -339,7 +343,7 @@ class App(QWidget):
 
     def runGenerator(self):
         try:
-            p1 = subprocess.Popen([self.project.python_exec, self.runpath,"-p",str(self.project.filename)])
+            p1 = subprocess.Popen([self.project.python_exec, self.project.runpath,"-p",str(self.project.filename)])
             while(p1.returncode is None):
                 p1.poll()
             QMessageBox.question(self, "Message", "Graph generator has finished.", QMessageBox.Ok)
@@ -360,10 +364,7 @@ class App(QWidget):
             self.project.exportProject()
             buttonReply = QMessageBox.question(self, "Message", "File saved. Run graph generator?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             if(buttonReply == QMessageBox.Yes):
-                p1 = subprocess.Popen(["python", self.runpath, " -p ", self.project.filename])
-                while(p1.returncode is None):
-                    p1.poll()
-                QMessageBox.question(self, "Message", "Graph generator has finished.", QMessageBox.Ok)
+                self.runGenerator()
 
     def ListItem_UP(self):
         if(len(self.dataView.selectedIndexes())==0):

@@ -260,3 +260,8 @@ class GraphEdit(QWidget):
             self.flogscalecheck.setChecked(True)
         else:
             self.flogscalecheck.setChecked(False)
+
+        imagesave_text = "[Currently] Image saving mode"
+        if(self.project.getSaveToggle(False)):
+            imagesave_text = "[Currently] Image showing mode"
+        self.imagesave.setText(imagesave_text)

@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
         file_saveNewProject = QAction("Save project as", self)
         file_saveNewProject.setShortcut('Ctrl+B')
         file_saveNewProject.setStatusTip('Select file name for curent project and save it.')
-        file_saveNewProject.triggered.connect(self.widget.FileTab.svNewFile)
+        file_saveNewProject.triggered.connect(self.sendToNewSave)
 
         file_loadProject = QAction("Load project", self)
         file_loadProject.setShortcut('Ctrl+O')
@@ -153,8 +153,20 @@ class MainWindow(QMainWindow):
         Function repairing not saving current project
         via 'Ctrl+S' shortcut.
         '''
+        temp_pT = self.previousTab
         self.updateAllTabs()
         self.widget.FileTab.svFile()
+        self.previousTab = 0
+        self.updateAllTabs()
+        self.previousTab = temp_pT
+    
+    def sendToNewSave(self):
+        temp_pT = self.previousTab
+        self.updateAllTabs()
+        self.widget.FileTab.svNewFile()
+        self.previousTab = 0
+        self.updateAllTabs()
+        self.previousTab = temp_pT
 
     def updateAllTabs(self):
         if(self.previousTab == 0):
@@ -170,6 +182,10 @@ class MainWindow(QMainWindow):
         self.widget.FileTab.setProject(self.previousProject)
         self.widget.GraphTab.setProject(self.previousProject)
         self.widget.LegendTab.setProject(self.previousProject)
+        imagesave_text = "Toggle showing graph"
+        if(self.widget.FileTab.project.getSaveToggle(False)):
+            imagesave_text = "Toggle saving graph"
+        self.project_graphToggle.setText(imagesave_text)
 
     def loadNewProject(self):
         '''

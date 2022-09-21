@@ -16,7 +16,7 @@ from modules.projectexporter import SGProjectExporter as sgp
 
 class LegendEdit(QWidget):
 
-    DATATYPE, DATANAME, DATALEGEND, DATASTYLE, DATACOLOR, DATAWIDTH, DATAALPHA = range(7)
+    DATATYPE, DATANAME, DATALEGEND, DATXCOLUMN, DATYCOLUMN, DATASTYLE, DATACOLOR, DATAWIDTH, DATAALPHA = range(9)
 
     def __init__(self):
         super().__init__()
@@ -51,6 +51,8 @@ class LegendEdit(QWidget):
         self.dataView.setColumnWidth(self.DATATYPE, 8)
         self.dataView.setColumnWidth(self.DATALEGEND, 150)
         self.dataView.setColumnWidth(self.DATASTYLE, 5)
+        self.dataView.setColumnWidth(self.DATXCOLUMN, 63)
+        self.dataView.setColumnWidth(self.DATYCOLUMN, 63)
         self.dataView.doubleClicked.connect(self.setUpdateButtonEditable)
 
         self.dataView.model().dataChanged.connect(self.getModelData)
@@ -150,7 +152,7 @@ class LegendEdit(QWidget):
             self.updateData()
 
     def createModel(self, parent):
-        model = QStandardItemModel(0, 7, parent)
+        model = QStandardItemModel(0, 9, parent)
         model.setHeaderData(self.DATATYPE, Qt.Horizontal, "Type")
         model.setHeaderData(self.DATANAME, Qt.Horizontal, "Dataset name")
         model.setHeaderData(self.DATALEGEND, Qt.Horizontal, "Legend")
@@ -158,6 +160,8 @@ class LegendEdit(QWidget):
         model.setHeaderData(self.DATACOLOR, Qt.Horizontal, "Color")
         model.setHeaderData(self.DATAWIDTH, Qt.Horizontal, "Line width")
         model.setHeaderData(self.DATAALPHA, Qt.Horizontal, "Opacity")
+        model.setHeaderData(self.DATXCOLUMN, Qt.Horizontal, "X Column")
+        model.setHeaderData(self.DATYCOLUMN, Qt.Horizontal, "Y Column")
         return model
 
     def getModelData(self):
@@ -168,10 +172,11 @@ class LegendEdit(QWidget):
             self.project.setLineStyle(self.dataView.model().item(o, self.DATASTYLE).text(), fileindex=o)
             self.project.setLineWidth(self.dataView.model().item(o, self.DATAWIDTH).text(), fileindex=o)
             self.project.setLineAlpha(self.dataView.model().item(o, self.DATAALPHA).text(), fileindex=o)
+            self.project.setColumns(self.dataView.model().item(o, self.DATXCOLUMN).text(), self.dataView.model().item(o, self.DATYCOLUMN).text(), fileindex=o)
             
         self.updateButton.setEnabled(False)
 
-    def addEntry(self, model, datatype, dataname, datalegend, datastyle, datacolor, datawidth, dataalpha):
+    def addEntry(self, model, datatype, dataname, datalegend, datastyle, datacolor, datawidth, dataalpha, datxcolumn, datycolumn):
         model.insertRow(0)
         model.setData(model.index(0, self.DATATYPE), datatype)
         model.setData(model.index(0, self.DATANAME), dataname)
@@ -180,6 +185,8 @@ class LegendEdit(QWidget):
         model.setData(model.index(0, self.DATACOLOR), datacolor)
         model.setData(model.index(0, self.DATAWIDTH), datawidth)
         model.setData(model.index(0, self.DATAALPHA), dataalpha)
+        model.setData(model.index(0, self.DATXCOLUMN), datxcolumn)
+        model.setData(model.index(0, self.DATYCOLUMN), datycolumn)
     
     def updateListView(self):
         self.model = self.createModel(self)
@@ -194,6 +201,8 @@ class LegendEdit(QWidget):
                           self.project.getLineStyle(i),
                           self.project.getLineColor(i),
                           self.project.getLineWidth(i),
-                          self.project.getLineAlpha(i)
+                          self.project.getLineAlpha(i),
+                          self.project.getColumns(i)[0],
+                          self.project.getColumns(i)[1]
                 )
         self.model.dataChanged.connect(self.getModelData)
