@@ -33,6 +33,9 @@ def main():
     projectFlag = False
     adaptToNACAFlag = False
     scaleFromNacaFlag = False
+    customSepFlag = False
+    extension = ""
+    extensionFlag = False
     epsilon=1e-10
     basePath = ""
     if("--path" in sys.argv):
@@ -77,40 +80,73 @@ def main():
             print(f"Could not read espilon value. Setting to {epsilon}")
     if(not projectFlag):
         project=None
+    if("--set-separators" in sys.argv):
+        separator = sys.argv[sys.argv.index("--set-separators")+1]
+        labelseparator = sys.argv[sys.argv.index("--set-separators")+2]
+        if(separator=='space'):
+            separator = ' '
+        if(labelseparator=='space'):
+            labelseparator = ' '
+        customSepFlag=True
+    if("--change-ex" in sys.argv):
+        extension = sys.argv[sys.argv.index("--change-ex")+1]
+        if(extension[0]!='.'):
+            extension = '.'+extension
+        extensionFlag=True
 
     if(project!=None):
         print("Received project. Iterating filenames.")
         for i in range(len(project)):
             print("Opening filename: "+project.filelist[i])
-            file = open("_spanaveraged.".join(project.filelist[i].split(".")), "w")
-            if('.xy' in project.filelist[i]):
-                flabels, fcontent = project.readData(filename=project.filelist[i],
-                                    separationChar="\t",
+            if(not customSepFlag):
+                if('.xy' in project.filelist[i]):
+                    flabels, fcontent = project.readData(filename=project.filelist[i],
+                                        separationChar="\t",
+                                        returnLabels=True,
+                                        lessInfo=True
+                        )
+                    labelseparator = " "
+                    separator = "\t"
+                    if(not extensionFlag):
+                        extension = '.xy'
+                if('.csv' in project.filelist[i]):
+                    flabels, fcontent = project.readData(filename=project.filelist[i],
+                                        separationChar=",",
+                                        returnLabels=True,
+                                        lessInfo=True
+                        )
+                    labelseparator = ","
+                    separator = ","
+                    if(not extensionFlag):
+                        extension = '.csv'
+                if('.txt' in project.filelist[i]):
+                    flabels, fcontent = project.readData(filename=project.filelist[i],
+                                        separationChar=" ",
+                                        labelSeparationChar=" ",
+                                        returnLabels=True,
+                                        lessInfo=True
+                        )
+                    labelseparator = " "
+                    separator = "\t"
+                    if(not extensionFlag):
+                        extension = '.txt'
+            else:
+                flabels, fcontent = project.readData(filename = project.filelist[i],
+                                    separationChar=separator,
+                                    labelSeparationChar=labelseparator,
                                     returnLabels=True,
+                                    terminator=None,
                                     lessInfo=True
-                    )
-                labelseparator = " "
-                separator = "\t"
-            if('.csv' in project.filelist[i]):
-                flabels, fcontent = project.readData(filename=project.filelist[i],
-                                    separationChar=",",
-                                    returnLabels=True,
-                                    lessInfo=True
-                    )
-                labelseparator = ","
-                separator = ","
-            if('.txt' in project.filelist[i]):
-                flabels, fcontent = project.readData(filename=project.filelist[i],
-                                    separationChar=" ",
-                                    labelSeparationChar=" ",
-                                    returnLabels=True,
-                                    lessInfo=True
-                    )
-                labelseparator = " "
-                separator = "\t"
+                )
+                if(not extensionFlag):
+                    if(len(project.filelist[i].split(".")[-1])>1):
+                        extension = '.'+project.filelist[i].split(".")[-1]
+                    else:
+                        extension = ''
             #fcontent = np.asarray(fcontent)
             print("flabels:")
             print(flabels)
+            file = open('.'.join(project.filelist[i].split(".")[:-1])+"_spanaveraged"+extension, "w")
             for o in range(len(flabels)):
                 set_column=0
                 if(o<len(flabels)-1):
@@ -123,7 +159,7 @@ def main():
                 #arguments
                 if("--column" in sys.argv):
                     try:
-                        set_column=float(sys.argv[sys.argv.index("--column")+1])
+                        set_column=int(sys.argv[sys.argv.index("--column")+1])
                     except:
                         print("Could not read column. Setting to 0")
                         set_column=0

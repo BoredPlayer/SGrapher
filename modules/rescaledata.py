@@ -151,6 +151,10 @@ def main():
     projectFlag = False
     adaptToNACAFlag = False
     scaleFromNacaFlag = False
+    customSepFlag = False
+    terminator=None
+    extension = ""
+    extensionFlag = False
     basePath = ""
     if("--path" in sys.argv):
         basePath = sys.argv[sys.argv.index("--path")+1]
@@ -184,40 +188,77 @@ def main():
         projectFlag = True
     if(not projectFlag):
         project=None
-    
+    if("--set-terminator" in sys.argv):
+        terminator = int(sys.argv[sys.argv.index("--set-terminator")+1])
+    if("--set-separators" in sys.argv):
+        separator = sys.argv[sys.argv.index("--set-separators")+1]
+        labelseparator = sys.argv[sys.argv.index("--set-separators")+2]
+        if(separator=='space'):
+            separator = ' '
+        if(labelseparator=='space'):
+            labelseparator = ' '
+        customSepFlag=True
+    if("--change-ex" in sys.argv):
+        extension = sys.argv[sys.argv.index("--change-ex")+1]
+        if(extension[0]!='.'):
+            extension = '.'+extension
+        extensionFlag=True
     if(project!=None):
         print("Received project. Iterating filenames.")
         for i in range(len(project)):
             print("Opening filename: "+project.filelist[i])
-            file = open("_edited.".join(project.filelist[i].split(".")), "w")
-            if('.xy' in project.filelist[i]):
-                flabels, fcontent = project.readData(filename=project.filelist[i],
-                                    separationChar="\t",
+            if(not customSepFlag):
+                if('.xy' in project.filelist[i]):
+                    flabels, fcontent = project.readData(filename=project.filelist[i],
+                                        separationChar="\t",
+                                        returnLabels=True,
+                                        terminator=terminator,
+                                        lessInfo=True
+                        )
+                    labelseparator = " "
+                    separator = "\t"
+                    if(not extensionFlag):
+                        extension = '.xy'
+                if('.csv' in project.filelist[i]):
+                    flabels, fcontent = project.readData(filename=project.filelist[i],
+                                        separationChar=",",
+                                        returnLabels=True,
+                                        terminator=terminator,
+                                        lessInfo=True
+                        )
+                    labelseparator = ","
+                    separator = ","
+                    if(not extensionFlag):
+                        extension = '.csv'
+                if('.txt' in project.filelist[i]):
+                    flabels, fcontent = project.readData(filename=project.filelist[i],
+                                        separationChar=" ",
+                                        labelSeparationChar=" ",
+                                        returnLabels=True,
+                                        terminator=terminator,
+                                        lessInfo=True
+                        )
+                    labelseparator = " "
+                    separator = "\t"
+                    if(not extensionFlag):
+                        extension = '.txt'
+            else:
+                flabels, fcontent = project.readData(filename = project.filelist[i],
+                                    separationChar=separator,
+                                    labelSeparationChar=labelseparator,
                                     returnLabels=True,
+                                    terminator=terminator,
                                     lessInfo=True
-                    )
-                labelseparator = " "
-                separator = "\t"
-            if('.csv' in project.filelist[i]):
-                flabels, fcontent = project.readData(filename=project.filelist[i],
-                                    separationChar=",",
-                                    returnLabels=True,
-                                    lessInfo=True
-                    )
-                labelseparator = ","
-                separator = ","
-            if('.txt' in project.filelist[i]):
-                flabels, fcontent = project.readData(filename=project.filelist[i],
-                                    separationChar=" ",
-                                    labelSeparationChar=" ",
-                                    returnLabels=True,
-                                    lessInfo=True
-                    )
-                labelseparator = " "
-                separator = "\t"
+                )
+                if(not extensionFlag):
+                    if(len(project.filelist[i].split(".")[-1])>1):
+                        extension = '.'+project.filelist[i].split(".")[-1]
+                    else:
+                        extension = ''
             #fcontent = np.asarray(fcontent)
             print("flabels:")
             print(flabels)
+            file = open('.'.join(project.filelist[i].split(".")[:-1])+"_edited"+extension, "w")
             for o in range(len(flabels)):
                 if(o<len(flabels)-1):
                     lcontent = np.asarray(fcontent)[:, flabels[o][0]:flabels[o+1][0]]
@@ -226,6 +267,16 @@ def main():
                 print(lcontent[0, :])
                 print("Arguments:")
                 print(sys.argv[1:])
+                if("--sort-by-x" in sys.argv):
+                    lcontent = lcontent[:,lcontent[0,:].argsort()]
+                if("--sort-by-y" in sys.argv):
+                    lcontent = lcontent[:,lcontent[1,:].argsort()]
+                if("--sort-by-column" in sys.argv):
+                    try:
+                        column = int(sys.argv[sys.argv.index("--sort-by-column")+1])
+                    except:
+                        raise Exception(f"Wrong type of column provided for sorting: {sys.argv[sys.argv.index('--sort-by-column')+1]}")
+                    lcontent = lcontent[:,lcontent[column,:].argsort()]
                 if("--scale-to-naca" in sys.argv):
                     try:
                         thickness=float(sys.argv[sys.argv.index("--scale-to-naca")+1])
@@ -274,6 +325,8 @@ def main():
                     else:
                         file.write("\n")
                 for j in range(len(lcontent)):
+                    if(j==terminator):
+                        break
                     for k in range(len(lcontent[j])):
                         file.write(f"{lcontent[j, k]}")
                         if(k<len(lcontent[j])-1):

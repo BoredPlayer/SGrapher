@@ -695,7 +695,7 @@ class SGProjectExporter():
         if(isinstance(files, list)):
             self.files = files
 
-    def readData(self, filename, separationChar = ' ', labelSeparationChar = ' ', stringTerminator = '"', returnLabels = False, lessInfo = True):
+    def readData(self, filename, separationChar = ' ', labelSeparationChar = ' ', stringTerminator = '"', returnLabels = False, terminator=None, lessInfo = True):
         '''
         Funkcja do odczytu plików tekstowych z wynikami. Może być stosowana do plików eksportowanych przez ANSYS Fluent,
         XFoil lub arkuszy csv. Funkcja może zwrócić zarówno wartości, jak i oznaczenia kolumn. Założono, że linia
@@ -723,7 +723,10 @@ class SGProjectExporter():
         prevLine = []# tabela poprzednią linię tekstu. Służy do uzupełniania tabeli labels
         labels = []# tabela zawieracjąca nazwy kolumn. Uzupełniana gdy flaga valline jest postawiona, a flaga prevStat nie. 
         prevStat = False# flaga poprzedniego statusu valline. Wykorzystywana do włączania/wyłączania zapisu nazw kolumn.
-        for line in file:# dla każdej linii w pliku
+        for linenum, line in enumerate(file):# dla każdej linii w pliku
+            if(terminator!=None):
+                if(terminator==linenum):
+                    break
             if(not lessInfo):
                 print("Reading line")
             ll = line.split(separationChar)# rozbij linię po spacjach
