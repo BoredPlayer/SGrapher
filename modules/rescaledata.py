@@ -265,6 +265,11 @@ def main():
                     except:
                         print(f"Error: Could not convert x-scaling factor \""+sys.argv[sys.argv.index("--scale-y")+1]+"\" to float.")
                     lcontent[1, :] = lcontent[1, :]*scalar
+                
+                if("--scale" in sys.argv):
+                    lcontent[int(sys.argv[sys.argv.index("--scale")+1]), :] = lcontent[int(sys.argv[sys.argv.index("--scale")+1]), :] * float(sys.argv[sys.argv.index("--scale")+2])
+                if("--bias" in sys.argv):
+                    lcontent[int(sys.argv[sys.argv.index("--bias")+1]), :] = lcontent[int(sys.argv[sys.argv.index("--bias")+1]), :]+float(sys.argv[sys.argv.index("--bias")+2])
                 print(f"flabels:{flabels[o]}")
                 lcontent = np.transpose(lcontent)
                 for j in range(len(flabels[o])-1):

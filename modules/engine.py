@@ -68,6 +68,10 @@ def main():
                     ycontent = np.absolute(ycontent)
                 if(project.isXLogScaleForced()):
                     xcontent = np.absolute(xcontent)
+                if(project.isNormed(0)):
+                    xcontent = (xcontent-np.min(xcontent))/(np.max(xcontent)-np.min(xcontent))
+                if(project.isNormed(1)):
+                    ycontent = (ycontent-np.min(ycontent))/(np.max(ycontent)-np.min(ycontent))
                 gr.loadData(xcontent, ycontent)
             else:
                 lcontent = np.asarray(fcontent)[:, flabels[o][0]:]
@@ -79,6 +83,10 @@ def main():
                     ycontent = np.absolute(ycontent)
                 if(project.isXLogScaleForced()):
                     xcontent = np.absolute(xcontent)
+                if(project.isNormed(0)):
+                    xcontent = (xcontent-np.min(xcontent))/(np.max(xcontent)-np.min(xcontent))
+                if(project.isNormed(1)):
+                    ycontent = (ycontent-np.min(ycontent))/(np.max(ycontent)-np.min(ycontent))
                 gr.loadData(xcontent, ycontent)
             print(f"Is label {project.getLegend(i)} in gr.labels?")
             print(project.getLegend(i) in gr.labels)

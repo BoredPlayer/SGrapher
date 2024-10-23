@@ -196,7 +196,7 @@ class SGProjectExporter():
                     try:
                         self.OUTPUTDOMAINMINX = float(ll[1])
                     except:
-                        if(ll[1]=='auto'):
+                        if(ll[1]=='auto' or ll[1]=='norm'):
                             self.OUTPUTDOMAINMINX = ll[1]
                         else:
                             print("Warning! Could not read OUTPUTDOMAINMINX project variable.")
@@ -205,7 +205,7 @@ class SGProjectExporter():
                     try:
                         self.OUTPUTDOMAINMAXX = float(ll[1])
                     except:
-                        if(ll[1]=='auto'):
+                        if(ll[1]=='auto' or ll[1]=='norm'):
                             self.OUTPUTDOMAINMAXX = ll[1]
                         else:
                             print("Warning! Could not read OUTPUTDOMAINMAXX project variable.")
@@ -214,7 +214,7 @@ class SGProjectExporter():
                     try:
                         self.OUTPUTDOMAINMINY = float(ll[1])
                     except:
-                        if(ll[1]=='auto'):
+                        if(ll[1]=='auto' or ll[1]=='norm'):
                             self.OUTPUTDOMAINMINY = ll[1]
                         else:
                             print("Warning! Could not read OUTPUTDOMAINMINY project variable.")
@@ -223,7 +223,7 @@ class SGProjectExporter():
                     try:
                         self.OUTPUTDOMAINMAXY = float(ll[1])
                     except:
-                        if(ll[1]=='auto'):
+                        if(ll[1]=='auto' or ll[1]=='norm'):
                             self.OUTPUTDOMAINMAXY = ll[1]
                         else:
                             print("Warning! Could not read OUTPUTDOMAINMAXY project variable.")
@@ -234,6 +234,15 @@ class SGProjectExporter():
         file.close()
 
     def setDomainSize(self, domainMinX, domainMaxX, domainMinY, domainMaxY):
+        if(domainMinX == 'norm' or domainMaxX == 'norm'):
+            self.OUTPUTDOMAINMAXX = 'norm'
+            self.OUTPUTDOMAINMINX = 'norm'
+            if(domainMinY != 'norm' and domainMaxY != 'norm'):
+                return
+        if(domainMinY == 'norm' or domainMaxY == 'norm'):
+            self.OUTPUTDOMAINMAXY = 'norm'
+            self.OUTPUTDOMAINMINY = 'norm'
+            return
         if(domainMinX == 'auto' or domainMaxX == 'auto'):
             self.OUTPUTDOMAINMAXX = 'auto'
             self.OUTPUTDOMAINMINX = 'auto'
@@ -243,8 +252,8 @@ class SGProjectExporter():
                 self.OUTPUTDOMAINMINX = float(domainMinX)
             except:
                 print("Error: Wrong domain values.\nSetting domain X range to [0, 1]")
-                self.OUTPUTDOMAINMAXX = 0.0
-                self.OUTPUTDOMAINMINX = 1.0
+                self.OUTPUTDOMAINMAXX = 1.0
+                self.OUTPUTDOMAINMINX = 0.0
         if(domainMinY == 'auto' or domainMaxY == 'auto'):
             self.OUTPUTDOMAINMAXY = 'auto'
             self.OUTPUTDOMAINMINY = 'auto'
@@ -254,8 +263,8 @@ class SGProjectExporter():
                 self.OUTPUTDOMAINMINY = float(domainMinY)
             except:
                 print("Error: Wrong domain values.\nSetting domain Y range to [0, 1]")
-                self.OUTPUTDOMAINMAXY = 0.0
-                self.OUTPUTDOMAINMINY = 1.0
+                self.OUTPUTDOMAINMAXY = 1.0
+                self.OUTPUTDOMAINMINY = 0.0
     
     def addDataType(self, dataTypeID, dataTypeName):
         if(dataTypeID in self.typelist[0]):
@@ -342,6 +351,16 @@ class SGProjectExporter():
                 print(f"Warning: Wrong type of alpha. Expected float or int, got {type(legend)}")
         self.len+=1
 
+    def isNormed(self, axis=0):
+        if(axis==0):
+            if(self.OUTPUTDOMAINMINX == 'norm' or self.OUTPUTDOMAINMAXX == 'norm'):
+                return True
+        if(axis==1):
+            if(self.OUTPUTDOMAINMINY == 'norm' or self.OUTPUTDOMAINMAXY == 'norm'):
+                return True
+        return False
+
+
     def getDomainXSize(self):
         '''
         Function returning array of domain X-axis size.
@@ -351,6 +370,8 @@ class SGProjectExporter():
         None. Else it returns array of values.
         '''
         if(self.OUTPUTDOMAINMINX=='auto' or self.OUTPUTDOMAINMAXX=='auto'):
+            return None
+        if(self.OUTPUTDOMAINMINX=='norm' or self.OUTPUTDOMAINMAXX=='norm'):
             return None
         return [self.OUTPUTDOMAINMINX, self.OUTPUTDOMAINMAXX]
 
@@ -363,6 +384,8 @@ class SGProjectExporter():
         None. Else it returns array of values.
         '''
         if(self.OUTPUTDOMAINMINY=='auto' or self.OUTPUTDOMAINMAXY=='auto'):
+            return None
+        if(self.OUTPUTDOMAINMINY=='norm' or self.OUTPUTDOMAINMAXY=='norm'):
             return None
         return [self.OUTPUTDOMAINMINY, self.OUTPUTDOMAINMAXY]
 
